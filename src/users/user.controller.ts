@@ -10,7 +10,9 @@ import { User } from "./user.repository";
 export class CreateUserDto {
     @ApiProperty({example: 'name@domain.com'})
     email: string;
+    @ApiProperty({example: 'name'})
     name: string;
+    @ApiProperty({example: 'password123'})
     password: string;
 }
 
