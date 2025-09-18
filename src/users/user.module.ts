@@ -7,7 +7,7 @@ import { TokensService } from "src/auth/tokens.service";
 @Module({
     controllers: [UserController],
     providers: [UserRepository, UserService, TokensService],
-    exports: [UserService, UserRepository]
+    exports: [ UserRepository, UserService]
 })
 
 export class UserModule{}
