@@ -26,13 +26,13 @@ export class UserController {
         return this.userService.registerUser(userDto.email, userDto.name, userDto.password)
     }
 
-    @Put()
     @ApiBadRequestResponse({description: 'No fields provided to update', type: ExceptionResponse})
     @ApiOkResponse({description: 'User field updated successfully', type: User})
     @ApiConflictResponse({description: "No user can have the same email"})
     @ApiUnauthorizedResponse({description: 'Unauthorized user'})
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
+    @Put()
     async partialUpdate(@Req() req: AuthenticatedRequest, @Body() userDto: DtoUserOptional) {
         this.userService.partialUpdate(req.user.profile.id, userDto)   
     }

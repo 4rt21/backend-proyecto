@@ -11,6 +11,7 @@ export class AuthController {
     @Post("login")
     async login(@Body() dto: { email: string; password: string }) {
         const user = await this.userService.login(dto.email, dto.password);
+        
         if (!user) {
             throw new Error("Invalid credentials");
         }

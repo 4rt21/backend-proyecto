@@ -12,7 +12,7 @@ export type UserDto = {
 
 export type partialDto = {
     email?: string
-    password_hash?: string
+    password?: string
     name?:string
 }
 
@@ -33,12 +33,10 @@ export class UserService {
             throw new Error("User not found");
         }
 
-        if (user.password_hash !== sha256(password)) {
+        if (user.password !== await this.changePassword(user.id, password)) {
             throw new UnauthorizedException("Invalid password");
         }
-        
         return user;
-
     }
 
     async findById(id: string): Promise<User> {
@@ -48,6 +46,12 @@ export class UserService {
     async getAllUsers() {
         return this.userRepository.getAllUsers();
     }
+
+    async changePassword(id: string, newPassword: string): Promise<string> {
+        const salt = await this.userRepository.getSaltById(id);
+        return sha256(newPassword + salt);
+    }
+
 
     async partialUpdate(id: string, dtoUserOptional: DtoUserOptional): Promise<User> {
         if (Object.keys(dtoUserOptional).length === 0) {
@@ -59,6 +63,10 @@ export class UserService {
             if (existingUser && existingUser.email !== (dtoUserOptional.email)) {
                 throw new ConflictException('Email already exists');
             }
+        }
+
+        if (dtoUserOptional.password) {
+            dtoUserOptional.password = await this.changePassword(id, dtoUserOptional.password)
         }
 
         return this.userRepository.partialUpdate(id, dtoUserOptional)

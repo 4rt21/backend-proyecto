@@ -3,6 +3,7 @@ import { DtoUserOptional } from "src/admin/admin.controller";
 import { DbService } from "src/db/db.service";
 import { CreateUserDto } from "./user.controller";
 import { ApiProperty } from "@nestjs/swagger";
+import { sha256 } from "src/util/crypto/hash.util";
 
 export class User {
     @ApiProperty({example: "1"})
@@ -12,7 +13,7 @@ export class User {
     @ApiProperty({example: 'John Doe'})
     name: string;
     @ApiProperty({example: '55e1ebd3ebe4f1b46a5ccc9866d'})
-    password_hash: string;
+    password: string;
     @ApiProperty({example: '432423'})
     salt: string;
 }
@@ -54,6 +55,18 @@ export class UserRepository{
         return result[0];
     }
 
+    async getSaltById(id: string): Promise<string> {
+        const sql = 'SELECT salt FROM users WHERE id = ? LIMIT 1';
+        const [rows] = await this.dbService.getPool().query(sql, [id]);
+        const result = rows as {salt: string}[];
+
+        if (!result[0]) {
+            throw new NotFoundException(`User with id ${id} not found`);
+        }
+
+        return result[0].salt;
+    }
+
     async getAllUsers() {
         const query = "SELECT * FROM users"
         const [rows] = await this.dbService.getPool().query(query);
@@ -63,12 +76,6 @@ export class UserRepository{
     async partialUpdate(id: string, userDto: DtoUserOptional): Promise<User> {
         const keys = Object.keys(userDto);
         const values = Object.values(userDto);
-
-        const passwordIndex = keys.indexOf('password')
-
-        if (passwordIndex >= 0) {
-            keys[passwordIndex] = 'password_hash'
-        }
 
         const setClause = keys.map(key => `${key} = ?`).join(", ");
 
