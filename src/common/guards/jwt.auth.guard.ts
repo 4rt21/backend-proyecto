@@ -13,7 +13,7 @@ export class JwtAuthGuard implements CanActivate {
 
         const [schema, token] = auth.split(" ");
 
-        if (schema !== "Bearer" || !token) throw new UnauthorizedException("Token invalido");
+        if (schema !== "Bearer" || !token) throw new UnauthorizedException("Invalid token");
 
         try {
             const payload = await this.tokenService.verifyAccess(token);
@@ -24,7 +24,7 @@ export class JwtAuthGuard implements CanActivate {
             }
             return true;
         } catch (error) {
-            throw new UnauthorizedException("Token invalido");
+            throw new UnauthorizedException("Invalid token");
         }
 
     }

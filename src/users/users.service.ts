@@ -1,74 +1,152 @@
-import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
-import { UserRepository, User } from "./user.repository";
-import { sha256 } from "src/util/crypto/hash.util";
-import { parseArgs } from "util";
-import { DtoUserOptional } from "src/admin/admin.controller";
-import { CreateUserDto } from "./user.controller";
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { UserRepository, User } from './user.repository';
+import { sha256 } from 'src/util/crypto/hash.util';
+import { parseArgs } from 'util';
+import { CreateUserOptionalDto } from 'src/admin/admin.controller';
+import { CreateUserDto } from './user.controller';
 
 export type UserDto = {
-    email: string;
-    name: string;
-}
+  email: string;
+  name: string;
+};
 
 export type partialDto = {
-    email?: string
-    password?: string
-    name?:string
+  email?: string;
+  password?: string;
+  name?: string;
+};
+
+const adjectives = ['cool', 'fast', 'smart', 'bright', 'happy'];
+
+function generateCreativeUsername(name: string) {
+  const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const randomNum = Math.floor(Math.random() * 1000);
+  return `${adj}_${name.toLowerCase().replace(/\s+/g, '')}${randomNum}`;
 }
 
 @Injectable()
 export class UserService {
-    constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
-    async registerUser(email: string, name: string, password: string): Promise<UserDto | void> {
-        const hashedPassword = sha256(password);
-        return this.userRepository.registerUser(email, name, hashedPassword);
+  async registerUser(
+    email: string,
+    name: string,
+    password: string,
+    role_id: string,
+  ): Promise<any> {
 
+    const existingUser = await this.userRepository.findByEmail(email);
+
+    if (existingUser) {
+      throw new ConflictException('Email already exists');
     }
 
-    async login(email: string, password: string): Promise<User> {
-        const user = await this.userRepository.findByEmail(email);
+    const username = generateCreativeUsername(name.split(' ')[0]);
+    const salt = Math.random().toString(36).substring(2, 15);
+    const hashedPassword = sha256(password + salt);
 
-        if (!user) {
-            throw new Error("User not found");
-        }
+    const user = await this.userRepository.registerUser(
+      email,
+      name,
+      hashedPassword,
+      username,
+      salt,
+      role_id
+    );
 
-        if (user.password !== await this.changePassword(user.id, password)) {
-            throw new UnauthorizedException("Invalid password");
-        }
-        return user;
+    if (!user) {
+      throw new Error('User registration failed');
     }
 
-    async findById(id: string): Promise<User> {
-        return this.userRepository.findById(id);
+    await this.userRepository.generateUserSettings(user.id);
+    const userSettings = await this.userRepository.getUserSettings(user.id);
+
+    const { password: _, ...safeUser } = user;
+
+    return {
+      user: safeUser,
+      settings: userSettings,
+    };
+  }
+
+  async login(email: string, password: string): Promise<User> {
+    const user = await this.userRepository.findByEmail(email);
+
+    if (!user) {
+      throw new Error('User not found');
     }
 
-    async getAllUsers() {
-        return this.userRepository.getAllUsers();
+    if (user.password !== sha256(password + user.salt)) {
+      throw new UnauthorizedException('Invalid password');
     }
 
-    async changePassword(id: string, newPassword: string): Promise<string> {
-        const salt = await this.userRepository.getSaltById(id);
-        return sha256(newPassword + salt);
+    return user;
+  }
+
+  async findById(id: string): Promise<User> {
+    return this.userRepository.findById(id);
+  }
+
+  async getAllUsers() {
+    return this.userRepository.getAllUsers();
+  }
+
+  async changePassword(
+    id: string,
+    oldPassword: string,
+    newPassword: string,
+  ): Promise<string> {
+    const salt = await this.userRepository.getSaltById(id);
+
+    if (!salt) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+    const hashedOldPassword = sha256(oldPassword + salt);
+
+    const user = await this.userRepository.findById(id);
+
+    if (!user || user.password !== hashedOldPassword) {
+      throw new UnauthorizedException('Invalid old password');
     }
 
+    const hashedNewPassword = sha256(newPassword + salt);
 
-    async partialUpdate(id: string, dtoUserOptional: DtoUserOptional): Promise<User> {
-        if (Object.keys(dtoUserOptional).length === 0) {
-            throw new BadRequestException("No fields provided to update");
-        }
+    return this.userRepository.updatePassword(id, hashedNewPassword);
+  }
 
-        if (dtoUserOptional.email) {
-            const existingUser = await this.userRepository.findByEmail(dtoUserOptional.email);
-            if (existingUser && existingUser.email !== (dtoUserOptional.email)) {
-                throw new ConflictException('Email already exists');
-            }
-        }
-
-        if (dtoUserOptional.password) {
-            dtoUserOptional.password = await this.changePassword(id, dtoUserOptional.password)
-        }
-
-        return this.userRepository.partialUpdate(id, dtoUserOptional)
+  async partialUpdate(
+    id: string,
+    dtoUserOptional: CreateUserOptionalDto,
+  ): Promise<User> {
+    if (isNaN(Number(id))) {
+      throw new BadRequestException('Id must be a number');
     }
+
+    const updates: Partial<CreateUserOptionalDto> = {};
+
+    if (dtoUserOptional.email !== undefined)
+      updates.email = dtoUserOptional.email;
+    if (dtoUserOptional.name !== undefined) updates.name = dtoUserOptional.name;
+    if (dtoUserOptional.username !== undefined)
+      updates.username = dtoUserOptional.username;
+
+    if (Object.keys(updates).length === 0) {
+      throw new BadRequestException('No fields provided to update');
+    }
+
+    if (updates.email) {
+      const existingUser = await this.userRepository.findByEmail(updates.email);
+      if (existingUser && existingUser.id !== id) {
+        throw new ConflictException('Email already exists');
+      }
+    }
+
+    return this.userRepository.partialUpdate(id, updates);
+  }
 }

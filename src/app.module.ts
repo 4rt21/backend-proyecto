@@ -12,6 +12,7 @@ import { ReportsModule } from './reports/reports.module';
 import { S3Module } from './s3/s3.module';
 import { ReportsCategoryModule } from './reports_category/reports-category.module';
 import { CategoriesModule } from './categories/categories.module';
+import { RolesModule } from './roles/roles.module';
 @Module({
   imports: [
     JwtModule.register({
@@ -26,6 +27,7 @@ import { CategoriesModule } from './categories/categories.module';
     S3Module,
     ReportsCategoryModule,
     CategoriesModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

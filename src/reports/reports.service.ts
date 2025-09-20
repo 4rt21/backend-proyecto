@@ -19,13 +19,20 @@ export class ReportsService {
   ) {}
 
   async getReports(status?: string, id?: string) {
-    if (id) {
-      const report = await this.reportsRepository.getReportById(id);
-      if (!report) {
-        throw new NotFoundException(`Report with ID ${id} not found`);
-      }
+    const reports = await this.reportsRepository.getAllReports(status, id);
+
+    if (id && reports.length === 0) {
+      throw new NotFoundException(`Report with ID ${id} not found`);
     }
-    return this.reportsRepository.getAllReports(status, id);
+
+    const reportsWithUrls = await Promise.all(
+      reports.map(async (report) => ({
+        ...report,
+        image: await this.s3Service.getPresignedUrl(report.image),
+      })),
+    );
+
+    return reportsWithUrls;
   }
 
   async postReport(

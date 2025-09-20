@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
   IsNotEmpty,
@@ -25,4 +26,13 @@ export class PostReportDto {
   @IsNotEmpty()
   @IsNumberString()
   category: number;
+}
+
+export class PostReportWithFileDto extends PostReportDto {
+  @ApiProperty({
+    type: 'string',
+    format: 'binary',
+    description: 'Report image file',
+  })
+  file: any;
 }

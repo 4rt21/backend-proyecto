@@ -4,7 +4,7 @@ import { Pool, createPool } from "mysql2/promise";
 @Injectable()
 export class DbService implements OnModuleInit, OnModuleDestroy {
 
-    private pool: Pool;q
+    private pool: Pool;
 
     onModuleInit(): void {
         this.pool = createPool( {

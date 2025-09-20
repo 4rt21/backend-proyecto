@@ -15,7 +15,7 @@ import {
 import { ReportsService } from './reports.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { GetReportDto, ReportStatus } from './dtos/get-report-dto';
-import { PostReportDto } from './dtos/post-report-dto';
+import { PostReportDto, PostReportWithFileDto } from './dtos/post-report-dto';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -99,37 +99,6 @@ export class ReportsController {
         created_by: 3,
         status: 'rechazada',
       },
-      {
-        id: 4,
-        title: 'Unsafe School Crossing',
-        image: '/images/reports/school.png',
-        description: 'Children face danger crossing street near school.',
-        created_at: '2025-09-18T04:55:18.000Z',
-        updated_at: '2025-09-18T04:55:18.000Z',
-        created_by: 4,
-        status: 'pendiente',
-      },
-      {
-        id: 5,
-        title: 'Noise Pollution in Downtown',
-        image: '/images/reports/noise.png',
-        description: 'Excessive noise affecting residents.',
-        created_at: '2025-09-18T04:55:18.000Z',
-        updated_at: '2025-09-18T04:55:18.000Z',
-        created_by: 5,
-        status: 'aprobada',
-      },
-      {
-        id: 9,
-        title: 'Pagina fraudulenta',
-        image:
-          'https://ofraud-storage-system.s3.us-east-2.amazonaws.com/ff2927b15588f7b474578b8c72be3de0a2e256a9469338a5cf7214845c5a4812',
-        description: 'This is a description for the first report.',
-        created_at: '2025-09-18T22:21:55.000Z',
-        updated_at: '2025-09-18T22:21:55.000Z',
-        created_by: 1,
-        status: 'pendiente',
-      },
     ],
   })
   @ApiBadRequestResponse({
@@ -139,16 +108,15 @@ export class ReportsController {
         examples: {
           invalidStatus: {
             value: {
-              message: [
+              message:
                 'Status must be one of the following values: pendiente, aprobada, rechazada',
-              ],
               error: 'Bad Request',
               statusCode: 400,
             },
           },
           invalidId: {
             value: {
-              message: ['ID must be a positive integer'],
+              message: 'ID must be a positive integer',
               error: 'Bad Request',
               statusCode: 400,
             },
@@ -173,6 +141,10 @@ export class ReportsController {
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'Create Report',
+    type: PostReportWithFileDto,
+  })
+  @ApiBody({
+    description: 'Create Report without image',
     type: PostReportDto,
   })
   @Post()
@@ -213,7 +185,5 @@ export class ReportsController {
   }
 
   @Put()
-  async updateReport() {
-    
-  }
+  async updateReport() {}
 }
