@@ -32,7 +32,6 @@ export class ReportsService {
     reportDto: PostReportDto,
     file: Express.Multer.File,
   ): Promise<number> {
-    // ! validaciones anteriores
     const categoryId = await this.categoriesRepository.findById(
       reportDto.category,
     );
@@ -43,10 +42,11 @@ export class ReportsService {
       );
     }
 
-    // const file_path = await this.s3Service.uploadFile(file);
-    const file_path = 'test';
+    // const key = await this.s3Service.uploadFile(file, 'report-pictures');
 
-    if (!file_path) {
+    const key = 'test';
+
+    if (!key) {
       throw new HttpException(
         'File upload failed',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -55,7 +55,7 @@ export class ReportsService {
 
     const result: any = await this.reportsRepository.createReport(
       reportDto,
-      file_path,
+      key,
     );
 
     if (typeof result === 'object' && 'insertId' in result) {

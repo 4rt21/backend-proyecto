@@ -7,6 +7,7 @@ import {
   MaxFileSizeValidator,
   ParseFilePipe,
   Post,
+  Put,
   Query,
   UploadedFile,
   UseInterceptors,
@@ -30,7 +31,6 @@ import { plainToClass } from 'class-transformer';
 export class ReportsController {
   constructor(private readonly reportsService: ReportsService) {}
 
-  @Get()
   @ApiQuery({
     enum: ReportStatus,
     required: false,
@@ -165,6 +165,7 @@ export class ReportsController {
       statusCode: 404,
     },
   })
+  @Get()
   async getReports(@Query() query: GetReportDto) {
     return this.reportsService.getReports(query.status, query.id);
   }
@@ -209,5 +210,10 @@ export class ReportsController {
     );
 
     return { reportId, report_category };
+  }
+
+  @Put()
+  async updateReport() {
+    
   }
 }

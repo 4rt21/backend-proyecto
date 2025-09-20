@@ -1,4 +1,11 @@
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+  GetObjectCommand,
+} from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+
 import { HttpException, Injectable } from '@nestjs/common';
 import { randomName } from 'src/util/crypto/hash.util';
 
@@ -18,7 +25,7 @@ export class S3Service {
     },
   });
 
-  async uploadFile(file: Express.Multer.File): Promise<string> {
+  async uploadFile(file: Express.Multer.File, folder: string): Promise<string> {
     const key = randomName();
     const loader = new PutObjectCommand({
       Bucket: getEnvVar('AWS_BUCKET'),
@@ -29,10 +36,33 @@ export class S3Service {
 
     try {
       const result = await this.s3Client.send(loader);
-      return `https://${getEnvVar('AWS_BUCKET')}.s3.${getEnvVar('AWS_REGION')}.amazonaws.com/${key}`;
+      return `${folder}/${key}`;
     } catch (error) {
       console.error('S3 upload failed:', error);
       throw new HttpException('File upload failed', 500);
     }
+  }
+
+  async deleteFile(key: string): Promise<void> {
+    const deleteCommand = new DeleteObjectCommand({
+      Bucket: getEnvVar('AWS_BUCKET'),
+      Key: key,
+    });
+
+    try {
+      await this.s3Client.send(deleteCommand);
+    } catch (error) {
+      console.error('S3 delete failed:', error);
+      throw new HttpException('File deletion failed', 500);
+    }
+  }
+
+  async getPresignedUrl(key: string): Promise<string> {
+    const getCommand = new GetObjectCommand({
+      Bucket: getEnvVar('AWS_BUCKET'),
+      Key: key,
+    });
+
+    return getSignedUrl(this.s3Client, getCommand, { expiresIn: 3600 });
   }
 }

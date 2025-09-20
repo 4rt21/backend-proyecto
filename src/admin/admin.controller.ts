@@ -15,6 +15,7 @@ export class DtoUserOptional {
     password?: string
     @ApiProperty({example: 'John Doe', required: false})
     name?:string
+
 }
 
 
@@ -28,7 +29,6 @@ export class AdminController {
     @ApiNotFoundResponse({description: 'No user with that id found', type: ExceptionResponse})
     @ApiOkResponse({description: 'User field updated successfully', type: User})
     @ApiConflictResponse({description: "No user can have the same email"})
-
     @Put('user/:id')
     async putUser(@Param('id') id: string, @Body() userDto: DtoUserOptional): Promise<User> {
         return this.userService.partialUpdate(id, userDto)
@@ -47,6 +47,4 @@ export class AdminController {
     async getUser(@Param('id') id: string) {
         return this.userService.findById(id)
     }
-
-
 }

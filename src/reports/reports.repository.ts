@@ -24,14 +24,14 @@ export class ReportsRepository {
 
   async createReport(
     reportDto: PostReportDto,
-    file_path: string,
+    key: string,
   ): Promise<QueryResult | QueryError> {
     const sql =
       'INSERT INTO reports (title, image, description, created_by, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())';
 
     const params = [
       reportDto.title,
-      file_path,
+      key,
       reportDto.description,
       reportDto.created_by,
       reportDto.status,
@@ -53,5 +53,4 @@ export class ReportsRepository {
     const [rows] = await this.dbService.getPool().query(sql, [id]);
     return rows[0];
   }
-
 }

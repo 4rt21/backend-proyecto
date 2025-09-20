@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   FileTypeValidator,
+  Get,
   MaxFileSizeValidator,
   ParseFilePipe,
   Post,
@@ -66,12 +67,23 @@ export class UserController {
   @ApiOkResponse({ description: 'User field updated successfully', type: User })
   @ApiConflictResponse({ description: 'No user can have the same email' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized user' })
-  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('file'))
   @Put()
   async partialUpdate(
     @Req() req: AuthenticatedRequest,
     @Body() userDto: DtoUserOptional,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1024 * 1024 }),
+          new FileTypeValidator({ fileType: 'image/*' }),
+        ],
+        fileIsRequired: false,
+      }),
+    )
+    file: Express.Multer.File,
   ) {
     this.userService.partialUpdate(req.user.profile.id, userDto);
   }
@@ -88,7 +100,6 @@ export class UserController {
           new MaxFileSizeValidator({ maxSize: 1024 * 1024 }),
           new FileTypeValidator({ fileType: 'image/*' }),
         ],
-        fileIsRequired: false,
       }),
     )
     file: Express.Multer.File,
@@ -114,5 +125,13 @@ export class UserController {
     );
 
     return { reportId, report_category };
+  }
+
+  @ApiUnauthorizedResponse({ description: 'Unauthorized user' })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('')
+  async getProfile(@Req() req: AuthenticatedRequest) {
+    return this.userService.findById(req.user.profile.id);
   }
 }
