@@ -11,6 +11,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { adminModule } from './admin/admin.module';
 import { ReportsModule } from './reports/reports.module';
 import { S3Module } from './s3/s3.module';
+import { report } from 'process';
+import { ReportsCategoryModule } from './reports_category/reports-category.module';
 
 @Module({
   imports: [
@@ -24,6 +26,7 @@ import { S3Module } from './s3/s3.module';
     adminModule,
     ReportsModule,
     S3Module,
+    ReportsCategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -43,9 +43,10 @@ export class AdminController {
     @ApiParam({name: 'id', type: 'string', description: 'El id del usuario'})
     @ApiNotFoundResponse({description: 'No user with that id found', type: ExceptionResponse})
     @ApiOkResponse({description: 'User found', type: User})
-
     @Get('user/:id')
     async getUser(@Param('id') id: string) {
         return this.userService.findById(id)
     }
+
+
 }

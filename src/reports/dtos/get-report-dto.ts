@@ -29,7 +29,6 @@ export class GetReportDto {
   status?: ReportStatus;
 
   @IsOptional()
-  @IsInt()
   @IsNumberString({}, { message: 'ID must be a valid number' })
   id?: string;
 }

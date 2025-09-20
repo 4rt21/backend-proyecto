@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { DbService } from 'src/db/db.service';
 import { PostReportDto } from './dtos/post-report-dto';
+import { DbResponse } from 'src/common/interfaces/db-response';
+import { QueryError, QueryResult } from 'mysql2';
 
 @Injectable()
 export class ReportsRepository {
@@ -20,7 +22,10 @@ export class ReportsRepository {
     return rows[0];
   }
 
-  async createReport(reportDto: PostReportDto, file_path: string) {
+  async createReport(
+    reportDto: PostReportDto,
+    file_path: string,
+  ): Promise<QueryResult | QueryError> {
     const sql =
       'INSERT INTO reports (title, image, description, created_by, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())';
 
@@ -34,6 +39,19 @@ export class ReportsRepository {
 
     const [result] = await this.dbService.getPool().query(sql, params);
 
-    return result ?? 'yuyu';
+    return result;
   }
+
+  async findByReportId(id: string) {
+    const sql = 'SELECT * FROM reports WHERE id = ?';
+    const [rows] = await this.dbService.getPool().query(sql, [id]);
+    return rows[0];
+  }
+
+  async findByCreatedId(id: string) {
+    const sql = 'SELECT * FROM reports WHERE created_by = ?';
+    const [rows] = await this.dbService.getPool().query(sql, [id]);
+    return rows[0];
+  }
+
 }
