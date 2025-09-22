@@ -13,6 +13,8 @@ import { S3Module } from './s3/s3.module';
 import { ReportsCategoryModule } from './reports_category/reports-category.module';
 import { CategoriesModule } from './categories/categories.module';
 import { RolesModule } from './roles/roles.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { UpvotesModule } from './upvotes/upvotes.module';
 @Module({
   imports: [
     JwtModule.register({
@@ -28,6 +30,8 @@ import { RolesModule } from './roles/roles.module';
     ReportsCategoryModule,
     CategoriesModule,
     RolesModule,
+    NotificationsModule,
+    UpvotesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

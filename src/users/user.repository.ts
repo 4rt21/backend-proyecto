@@ -117,4 +117,21 @@ export class UserRepository {
     const [rows] = await this.dbService.getPool().query(sql, [id]);
     return rows;
   }
+
+  async updateUserSettings(id: string, settings: any): Promise<any> {
+    const keys = Object.keys(settings);
+    const values = Object.values(settings);
+
+    const setClause = keys.map((key) => `${key} = ?`).join(', ');
+
+    const query = `
+            UPDATE user_settings
+            SET ${setClause}
+            WHERE user_id = ?
+        `;
+
+    await this.dbService.getPool().query(query, [...values, id]);
+
+    return this.getUserSettings(id);
+  }
 }

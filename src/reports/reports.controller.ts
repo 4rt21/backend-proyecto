@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   FileTypeValidator,
   Get,
   MaxFileSizeValidator,
@@ -143,12 +144,8 @@ export class ReportsController {
     description: 'Create Report',
     type: PostReportWithFileDto,
   })
-  @ApiBody({
-    description: 'Create Report without image',
-    type: PostReportDto,
-  })
-  @Post()
   @UseInterceptors(FileInterceptor('file'))
+  @Post()
   async createReport(
     @Body() rawBody: any,
     @UploadedFile(
@@ -186,4 +183,7 @@ export class ReportsController {
 
   @Put()
   async updateReport() {}
+
+  @Delete()
+  async deleteReport() {}
 }
