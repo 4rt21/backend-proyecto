@@ -15,7 +15,11 @@ import {
 } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { GetReportDto, ReportStatus } from './dtos/get-report-dto';
+import {
+  GetReportCountDto,
+  GetReportDto,
+  ReportStatus,
+} from './dtos/get-report-dto';
 import { PostReportDto, PostReportWithFileDto } from './dtos/post-report-dto';
 import {
   ApiBadRequestResponse,
@@ -186,4 +190,10 @@ export class ReportsController {
 
   @Delete()
   async deleteReport() {}
+
+  @Get('count')
+  async countReports(@Query() query: GetReportCountDto) {
+    console.log(typeof query.status);
+    return this.reportsService.countReports(query);
+  }
 }

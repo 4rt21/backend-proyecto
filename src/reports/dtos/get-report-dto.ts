@@ -32,3 +32,17 @@ export class GetReportDto {
   @IsNumberString({}, { message: 'ID must be a valid number' })
   id?: string;
 }
+
+export class GetReportCountDto {
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      return value.toLowerCase().trim();
+    }
+    return value;
+  })
+  @IsEnum(ReportStatus, {
+    message: `Status must be one of the following values: ${Object.values(ReportStatus).join(', ')}`,
+  })
+  status?: ReportStatus;
+}

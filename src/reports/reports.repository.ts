@@ -5,6 +5,7 @@ import { DbResponse } from 'src/common/interfaces/db-response';
 import { QueryError, QueryResult, RowDataPacket } from 'mysql2';
 import { IsDateString, IsInt, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { GetReportCountDto, GetReportDto } from './dtos/get-report-dto';
 export class ReportDto {
   @ApiProperty({ example: 1, description: 'Unique identifier of the report' })
   @IsInt()
@@ -116,5 +117,18 @@ export class ReportsRepository {
     const sql = 'SELECT * FROM reports WHERE created_by = ?';
     const [rows] = await this.dbService.getPool().query(sql, [id]);
     return rows[0];
+  }
+
+  async countReports(
+    query: GetReportCountDto,
+  ): Promise<Record<string, number>> {
+    const sql =
+      query.status == undefined
+        ? 'SELECT COUNT(*) as count FROM reports'
+        : 'SELECT COUNT(*) as count FROM reports WHERE status = ?';
+    const [rows] = await this.dbService
+      .getPool()
+      .query<RowDataPacket[]>(sql, [query.status]);
+    return { count: rows[0].count as number };
   }
 }

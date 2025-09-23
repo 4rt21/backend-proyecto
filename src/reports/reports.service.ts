@@ -9,6 +9,7 @@ import { S3Service } from 'src/s3/s3.service';
 import { PostReportDto } from './dtos/post-report-dto';
 import { ReportsCategoryRepository } from 'src/reports_category/reports-category-repository';
 import { CategoriesRepository } from 'src/categories/categories.repository';
+import { GetReportCountDto } from './dtos/get-report-dto';
 @Injectable()
 export class ReportsService {
   constructor(
@@ -80,5 +81,9 @@ export class ReportsService {
       reportId,
       categoryId,
     );
+  }
+
+  async countReports(query: GetReportCountDto) {
+    return this.reportsRepository.countReports(query);
   }
 }
