@@ -149,4 +149,8 @@ export class UserService {
 
     return this.userRepository.partialUpdate(id, updates);
   }
+
+  async getPostInfo(userId: string) {
+    return await this.userRepository.getPostsInfoByUserId(userId);
+  }
 }

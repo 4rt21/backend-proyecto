@@ -131,4 +131,22 @@ export class ReportsRepository {
       .query<RowDataPacket[]>(sql, [query.status]);
     return { count: rows[0].count as number };
   }
+
+  async modifyReport(reportId: number, reportDto: PostReportDto) {
+    const keys = Object.keys(reportDto);
+    const values = Object.values(reportDto);
+
+    const setClause = keys.map((key) => `${key} = ?`).join(', ');
+
+    const query = `
+            UPDATE users
+            SET ${setClause}
+            WHERE id = ?
+        `;
+
+    const params = [...values, reportId];
+
+    const [result] = await this.dbService.getPool().query(query, params);
+    return result;
+  }
 }

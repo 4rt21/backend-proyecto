@@ -134,4 +134,47 @@ export class UserRepository {
 
     return this.getUserSettings(id);
   }
+
+  async getPostsInfoByUserId(userId: string): Promise<any> {
+    const sql = `
+     WITH all_statuses AS (
+      SELECT 'pendiente' AS status
+      UNION ALL SELECT 'aprobado'
+      UNION ALL SELECT 'rechazado'
+    )
+    SELECT s.status AS info_row, 
+          COUNT(r.id) AS count
+    FROM all_statuses s
+    LEFT JOIN reports r
+          ON r.status = s.status
+          AND r.created_by = ?
+    GROUP BY s.status
+
+    UNION ALL
+
+    SELECT 'total', COUNT(*) 
+    FROM reports
+    WHERE created_by = ?
+
+    UNION ALL
+
+    SELECT 'protegidas', COUNT(*) 
+    FROM upvotes
+    WHERE user_id = ?;`;
+
+    const [rows]: any[] = await this.dbService
+      .getPool()
+      .query(sql, [userId, userId, userId]);
+
+    const result = rows.reduce(
+      (acc, row) => {
+        acc[row.info_row] = row.count;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
+
+    return result;
+
+  }
 }

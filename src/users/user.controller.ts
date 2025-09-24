@@ -76,7 +76,7 @@ export class UserController {
       userDto.email,
       userDto.name,
       userDto.password,
-      userDto.role_id
+      userDto.role_id,
     );
   }
 
@@ -187,5 +187,11 @@ export class UserController {
       body.newPassword,
     );
     return { message: 'Password changed successfully' };
+  }
+
+  @Get('post-info')
+  @UseGuards(JwtAuthGuard)
+  async getPostInfo(@Req() req: AuthenticatedRequest) {
+    return this.userService.getPostInfo(req.user.profile.id);
   }
 }

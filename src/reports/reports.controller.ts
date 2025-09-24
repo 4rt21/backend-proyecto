@@ -171,6 +171,7 @@ export class ReportsController {
     });
 
     const errors = await validate(body);
+    
     if (errors.length > 0) {
       throw new BadRequestException(errors);
     }
@@ -186,7 +187,9 @@ export class ReportsController {
   }
 
   @Put()
-  async updateReport() {}
+  async updateReport() {
+
+  }
 
   @Delete()
   async deleteReport() {}
