@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   FileTypeValidator,
   Get,
   MaxFileSizeValidator,
@@ -35,6 +36,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   MIN_LENGTH,
   MinLength,
   validate,
@@ -58,7 +60,9 @@ export class CreateUserDto {
   @IsNotEmpty()
   @MinLength(MIN_PASSWORD_LENGTH)
   password: string;
-  role_id: string;
+  @ApiProperty({ example: '1', default: '1' })
+  @IsOptional()
+  role_id: string = '1';
 }
 
 @ApiTags('user endpoint')
@@ -175,6 +179,7 @@ export class UserController {
       invalidOldPassword: UnauthorizedResponse.invalidOldPassword,
     },
   })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post('password')
   async changePassword(
@@ -191,7 +196,15 @@ export class UserController {
 
   @Get('post-info')
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   async getPostInfo(@Req() req: AuthenticatedRequest) {
     return this.userService.getPostInfo(req.user.profile.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Delete()
+  async deleteUser(@Req() req: AuthenticatedRequest) {
+    return this.userService.deleteUser(req.user.profile.id);
   }
 }

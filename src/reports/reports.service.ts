@@ -10,6 +10,7 @@ import { PostReportDto } from './dtos/post-report-dto';
 import { ReportsCategoryRepository } from 'src/reports_category/reports-category-repository';
 import { CategoriesRepository } from 'src/categories/categories.repository';
 import { GetReportCountDto } from './dtos/get-report-dto';
+import { UpdateReportDTO } from './dtos/update-report-dto';
 @Injectable()
 export class ReportsService {
   constructor(
@@ -86,4 +87,13 @@ export class ReportsService {
   async countReports(query: GetReportCountDto) {
     return this.reportsRepository.countReports(query);
   }
+
+  async deleteReport(id: string) {
+    if (!(await this.reportsRepository.findByReportId(id))) {
+      throw new NotFoundException(`Report with ID ${id} not found`);
+    }
+    return this.reportsRepository.deleteReport(id);
+  }
+
+  async updateReport(body: UpdateReportDTO, file: Express.Multer.File) {}
 }

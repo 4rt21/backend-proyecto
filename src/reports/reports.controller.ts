@@ -12,6 +12,7 @@ import {
   Query,
   UploadedFile,
   UseInterceptors,
+  Param,
 } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -31,6 +32,9 @@ import {
 } from '@nestjs/swagger';
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
+import { UpdateReportDTO } from './dtos/update-report-dto';
+import { NotFoundResponse } from 'src/common/interfaces/exception-responses/responses-examples';
+import { ApiQueryStatusDto } from 'src/docs/api-querys';
 
 @Controller('reports')
 export class ReportsController {
@@ -43,15 +47,12 @@ export class ReportsController {
     type: String,
     examples: {
       pendiente: {
-        summary: 'Pendiente status',
         value: 'pendiente',
       },
       aprobada: {
-        summary: 'Aprobada status',
         value: 'aprobada',
       },
       rechazada: {
-        summary: 'Rechazada status',
         value: 'rechazada',
       },
     },
@@ -62,11 +63,9 @@ export class ReportsController {
     type: String,
     examples: {
       valid: {
-        summary: 'Valid ID',
         value: '123',
       },
       invalid: {
-        summary: 'Invalid ID',
         value: 'abc',
       },
     },
@@ -131,12 +130,8 @@ export class ReportsController {
     },
   })
   @ApiNotFoundResponse({
-    description: 'Report with specified ID not found .',
-    example: {
-      message: 'Report with ID 2.3 not found',
-      error: 'Not Found',
-      statusCode: 404,
-    },
+    description: 'Report with specified ID not found.',
+    example: NotFoundResponse.userNotFound.value,
   })
   @Get()
   async getReports(@Query() query: GetReportDto) {
@@ -171,7 +166,7 @@ export class ReportsController {
     });
 
     const errors = await validate(body);
-    
+
     if (errors.length > 0) {
       throw new BadRequestException(errors);
     }
@@ -187,15 +182,36 @@ export class ReportsController {
   }
 
   @Put()
-  async updateReport() {
-
+  @UseInterceptors(FileInterceptor('file'))
+  async updateReport(
+    @Body() body: UpdateReportDTO,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1024 * 1024 }),
+          new FileTypeValidator({ fileType: 'image/*' }),
+        ],
+        fileIsRequired: false,
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    return this.reportsService.updateReport(body, file);
   }
 
-  @Delete()
-  async deleteReport() {}
+  @Delete(':id')
+  @ApiNotFoundResponse({
+    description: 'Report not found',
+    example: NotFoundResponse.userNotFound.value,
+  })
+  @ApiOkResponse({ description: 'Report deleted successfully', example: true })
+  async deleteReport(@Param('id') id: string) {
+    return this.reportsService.deleteReport(id);
+  }
 
+  @ApiOkResponse({ description: 'Count of reports', example: { count: 42 } })
   @Get('count')
-  async countReports(@Query() query: GetReportCountDto) {
+  async countReports(@Query() query: ApiQueryStatusDto) {
     console.log(typeof query.status);
     return this.reportsService.countReports(query);
   }

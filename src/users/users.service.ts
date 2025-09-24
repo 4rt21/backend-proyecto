@@ -40,7 +40,7 @@ export class UserService {
     password: string,
     role_id: string,
   ): Promise<any> {
-
+    
     const existingUser = await this.userRepository.findByEmail(email);
 
     if (existingUser) {
@@ -57,7 +57,7 @@ export class UserService {
       hashedPassword,
       username,
       salt,
-      role_id
+      role_id,
     );
 
     if (!user) {
@@ -152,5 +152,9 @@ export class UserService {
 
   async getPostInfo(userId: string) {
     return await this.userRepository.getPostsInfoByUserId(userId);
+  }
+
+  async deleteUser(userId: string) {
+    return await this.userRepository.deleteUserById(userId);
   }
 }

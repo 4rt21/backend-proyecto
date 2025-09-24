@@ -142,6 +142,7 @@ export class UserRepository {
       UNION ALL SELECT 'aprobado'
       UNION ALL SELECT 'rechazado'
     )
+      
     SELECT s.status AS info_row, 
           COUNT(r.id) AS count
     FROM all_statuses s
@@ -175,6 +176,11 @@ export class UserRepository {
     );
 
     return result;
+  }
 
+  async deleteUserById(userId: string) {
+    const sql = 'DELETE FROM users WHERE id = ?';
+    const [rows] = await this.dbService.getPool().query(sql, [userId]);
+    return (rows as any).affectedRows > 0;
   }
 }

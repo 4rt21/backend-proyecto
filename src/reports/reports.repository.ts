@@ -149,4 +149,10 @@ export class ReportsRepository {
     const [result] = await this.dbService.getPool().query(query, params);
     return result;
   }
+
+  async deleteReport(id: string): Promise<boolean> {
+    const sql = 'DELETE FROM reports WHERE id = ?';
+    const [result] = await this.dbService.getPool().query(sql, [id]);
+    return (result as any).affectedRows > 0;
+  }
 }

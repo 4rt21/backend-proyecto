@@ -43,7 +43,7 @@ export const NotFoundResponse = {
   userNotFound: {
     summary: 'No user with that id found',
     value: {
-      message: '"User with id 442 not found',
+      message: 'User with id 442 not found',
       error: 'Not Found',
       statusCode: 404,
     },
