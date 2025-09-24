@@ -15,6 +15,8 @@ import { CategoriesModule } from './categories/categories.module';
 import { RolesModule } from './roles/roles.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { UpvotesModule } from './upvotes/upvotes.module';
+import { ImagesService } from './images/images.service';
+import { ImagesModule } from './images/images.module';
 @Module({
   imports: [
     JwtModule.register({
@@ -32,8 +34,9 @@ import { UpvotesModule } from './upvotes/upvotes.module';
     RolesModule,
     NotificationsModule,
     UpvotesModule,
+    ImagesModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ImagesService],
 })
 export class AppModule {}

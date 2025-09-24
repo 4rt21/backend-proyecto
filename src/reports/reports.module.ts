@@ -5,10 +5,18 @@ import { ReportsRepository } from './reports.repository';
 import { S3Service } from 'src/s3/s3.service';
 import { ReportsCategoryRepository } from 'src/reports_category/reports-category-repository';
 import { CategoriesRepository } from 'src/categories/categories.repository';
+import { ImagesService } from 'src/images/images.service';
 
 @Module({
   controllers: [ReportsController],
-  providers: [ReportsService, ReportsRepository, S3Service, ReportsCategoryRepository, CategoriesRepository],
+  providers: [
+    ReportsService,
+    ReportsRepository,
+    S3Service,
+    ReportsCategoryRepository,
+    CategoriesRepository,
+    ImagesService,
+  ],
   exports: [ReportsService, ReportsRepository],
 })
 export class ReportsModule {}

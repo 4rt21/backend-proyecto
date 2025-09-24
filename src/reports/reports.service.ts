@@ -11,6 +11,7 @@ import { ReportsCategoryRepository } from 'src/reports_category/reports-category
 import { CategoriesRepository } from 'src/categories/categories.repository';
 import { GetReportCountDto } from './dtos/get-report-dto';
 import { UpdateReportDTO } from './dtos/update-report-dto';
+import { ImagesService } from 'src/images/images.service';
 @Injectable()
 export class ReportsService {
   constructor(
@@ -18,6 +19,7 @@ export class ReportsService {
     private readonly s3Service: S3Service,
     private readonly reportsCategoryRepository: ReportsCategoryRepository,
     private readonly categoriesRepository: CategoriesRepository,
+    private readonly imagesService: ImagesService,
   ) {}
 
   async getReports(status?: string, id?: string) {
@@ -51,9 +53,7 @@ export class ReportsService {
       );
     }
 
-    // const key = await this.s3Service.uploadFile(file, 'report-pictures');
-
-    const key = 'test';
+    const key = await this.imagesService.uploadFile(file, 'report-pictures');
 
     if (!key) {
       throw new HttpException(
@@ -89,11 +89,26 @@ export class ReportsService {
   }
 
   async deleteReport(id: string) {
-    if (!(await this.reportsRepository.findByReportId(id))) {
+    const report = await this.reportsRepository.findByReportId(id);
+
+    if (!report) {
       throw new NotFoundException(`Report with ID ${id} not found`);
     }
+
+    await this.imagesService.deleteFile(report.image);
+
     return this.reportsRepository.deleteReport(id);
   }
 
-  async updateReport(body: UpdateReportDTO, file: Express.Multer.File) {}
+  async updateReport(id: string, body: any, file: Express.Multer.File) {
+    const report = await this.reportsRepository.findByReportId(id)     
+    
+    if (!report) {
+      throw new NotFoundException(`Report with ID ${id} not found`);
+    }
+
+    await this.imagesService.modifyFile(report.image, file);
+
+    return this.reportsRepository.modifyReport(id, body);
+  }
 }

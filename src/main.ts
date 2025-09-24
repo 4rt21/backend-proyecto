@@ -12,7 +12,11 @@ async function bootstrap() {
   expressApp.disable('x-powered-by');
   const adapter = new ExpressAdapter(expressApp);
   const app = await NestFactory.create(AppModule, adapter);
-
+  app.enableCors({
+    origin: 'http://localhost:5173', 
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, 
+  });
   const config = new DocumentBuilder()
     .setTitle('Endpoints de CRUD Usuarios')
     .setVersion('1.0')

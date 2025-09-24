@@ -1,3 +1,4 @@
+import { IsUUID } from 'class-validator';
 import crypto, { createHash } from 'crypto';
 
 export function sha256(input: string): string {

@@ -181,10 +181,11 @@ export class ReportsController {
     return { reportId, report_category };
   }
 
-  @Put()
+  @Put(':id')
   @UseInterceptors(FileInterceptor('file'))
   async updateReport(
-    @Body() body: UpdateReportDTO,
+    @Body() body: any,
+    @Param('id') id: string,
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -196,7 +197,7 @@ export class ReportsController {
     )
     file: Express.Multer.File,
   ) {
-    return this.reportsService.updateReport(body, file);
+    return this.reportsService.updateReport(id, body, file);
   }
 
   @Delete(':id')
@@ -212,7 +213,6 @@ export class ReportsController {
   @ApiOkResponse({ description: 'Count of reports', example: { count: 42 } })
   @Get('count')
   async countReports(@Query() query: ApiQueryStatusDto) {
-    console.log(typeof query.status);
     return this.reportsService.countReports(query);
   }
 }

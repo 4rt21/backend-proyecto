@@ -132,7 +132,7 @@ export class ReportsRepository {
     return { count: rows[0].count as number };
   }
 
-  async modifyReport(reportId: number, reportDto: PostReportDto) {
+  async modifyReport(reportId: number, reportDto: any) {
     const keys = Object.keys(reportDto);
     const values = Object.values(reportDto);
 
