@@ -55,6 +55,7 @@ export class ReportsService {
 
     const key = await this.imagesService.uploadFile(file, 'report-pictures');
 
+    console.log('File uploaded with key:', key);
     if (!key) {
       throw new HttpException(
         'File upload failed',
@@ -101,14 +102,15 @@ export class ReportsService {
   }
 
   async updateReport(id: string, body: any, file: Express.Multer.File) {
-    const report = await this.reportsRepository.findByReportId(id)     
-    
+    const report = await this.reportsRepository.findByReportId(id);
+
     if (!report) {
       throw new NotFoundException(`Report with ID ${id} not found`);
     }
 
-    await this.imagesService.modifyFile(report.image, file);
+    const path = await this.imagesService.modifyFile(report.image, file);
 
+    body = { ...body, image: path };
     return this.reportsRepository.modifyReport(id, body);
   }
 }

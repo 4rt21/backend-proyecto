@@ -132,14 +132,16 @@ export class ReportsRepository {
     return { count: rows[0].count as number };
   }
 
-  async modifyReport(reportId: number, reportDto: any) {
+  async modifyReport(reportId: string, reportDto: any) {
+
+
     const keys = Object.keys(reportDto);
     const values = Object.values(reportDto);
 
     const setClause = keys.map((key) => `${key} = ?`).join(', ');
 
     const query = `
-            UPDATE users
+            UPDATE reports
             SET ${setClause}
             WHERE id = ?
         `;
