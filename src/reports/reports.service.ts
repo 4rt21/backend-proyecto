@@ -55,7 +55,6 @@ export class ReportsService {
 
     const key = await this.imagesService.uploadFile(file, 'report-pictures');
 
-    console.log('File uploaded with key:', key);
     if (!key) {
       throw new HttpException(
         'File upload failed',

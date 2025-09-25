@@ -16,6 +16,8 @@ export class User {
   password: string;
   @ApiProperty({ example: '432423' })
   salt: string;
+  @ApiProperty({ example: '/path/to/image.jpg', required: false })
+  image_path?: string;
 }
 
 @Injectable()

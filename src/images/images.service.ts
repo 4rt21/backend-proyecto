@@ -34,12 +34,14 @@ export class ImagesService {
     filePath: string,
     file: Express.Multer.File,
   ): Promise<string> {
+    if (filePath === 'profile-pictures/default.jpg') {
+      const folder = path.dirname(filePath); 
+      const newFilePath = await this.uploadFile(file, folder);
+      return newFilePath;
+    }
     await this.deleteFile(filePath);
-
     const folder = path.dirname(filePath);
-
     const newFilePath = await this.uploadFile(file, folder);
-
     return newFilePath;
   }
 }

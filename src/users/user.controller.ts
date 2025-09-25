@@ -109,7 +109,21 @@ export class UserController {
     )
     file: Express.Multer.File,
   ) {
-    this.userService.partialUpdate(req.user.profile.id, userDto);
+    const body = plainToClass(CreateUserOptionalDto, {
+      email: userDto.email,
+      name: userDto.name,
+      username: userDto.username,
+    });
+
+    console.log('body: ', body);
+    console.log('file: ', file);
+    const errors = await validate(body);
+
+    if (errors.length > 0) {
+      throw new BadRequestException(errors);
+    }
+
+    this.userService.partialUpdate(req.user.profile.id, userDto, file);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -10,6 +10,7 @@ import { sha256 } from 'src/util/crypto/hash.util';
 import { parseArgs } from 'util';
 import { CreateUserOptionalDto } from 'src/admin/admin.controller';
 import { CreateUserDto } from './user.controller';
+import { ImagesService } from 'src/images/images.service';
 
 export type UserDto = {
   email: string;
@@ -32,7 +33,10 @@ function generateCreativeUsername(name: string) {
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly imagesService: ImagesService,
+  ) {}
 
   async registerUser(
     email: string,
@@ -40,7 +44,6 @@ export class UserService {
     password: string,
     role_id: string,
   ): Promise<any> {
-    
     const existingUser = await this.userRepository.findByEmail(email);
 
     if (existingUser) {
@@ -123,10 +126,12 @@ export class UserService {
   async partialUpdate(
     id: string,
     dtoUserOptional: CreateUserOptionalDto,
+    file?: Express.Multer.File,
   ): Promise<User> {
     if (isNaN(Number(id))) {
       throw new BadRequestException('Id must be a number');
     }
+    const userToUpdate = await this.userRepository.findById(id);
 
     const updates: Partial<CreateUserOptionalDto> = {};
 
@@ -136,7 +141,7 @@ export class UserService {
     if (dtoUserOptional.username !== undefined)
       updates.username = dtoUserOptional.username;
 
-    if (Object.keys(updates).length === 0) {
+    if (Object.keys(updates).length === 0 && !file) {
       throw new BadRequestException('No fields provided to update');
     }
 
@@ -145,6 +150,14 @@ export class UserService {
       if (existingUser && existingUser.id !== id) {
         throw new ConflictException('Email already exists');
       }
+    }
+
+    if (file) {
+      const filepath = await this.imagesService.modifyFile(
+        userToUpdate.image_path!,
+        file,
+      );
+      updates.image_path = filepath;
     }
 
     return this.userRepository.partialUpdate(id, updates);

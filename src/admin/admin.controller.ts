@@ -1,6 +1,13 @@
 /* eslint-disable prettier/prettier */
 
-import { Body, Controller, Get, Param, Put } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Put,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -33,6 +40,9 @@ export class CreateUserOptionalDto {
   @ApiProperty({ example: 'johndoe', required: false })
   @IsOptional()
   username?: string;
+  @ApiProperty({ example: '/path/to/image.jpg', required: false })
+  @IsOptional()
+  image_path?: string;
 }
 
 @Controller('admin')
@@ -69,7 +79,6 @@ export class AdminController {
     @Param('id') id: string,
     @Body() userDto: CreateUserOptionalDto,
   ): Promise<User> {
-    console.log('Updating user with data:', userDto);
     return this.userService.partialUpdate(id, userDto);
   }
   @Get('user/list')
