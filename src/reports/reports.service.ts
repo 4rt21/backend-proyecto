@@ -22,8 +22,8 @@ export class ReportsService {
     private readonly imagesService: ImagesService,
   ) {}
 
-  async getReports(status?: string, id?: string) {
-    const reports = await this.reportsRepository.getAllReports(status, id);
+  async getReports(status_id?: string, id?: string) {
+    const reports = await this.reportsRepository.getAllReports(status_id, id);
 
     if (id && reports.length === 0) {
       throw new NotFoundException(`Report with ID ${id} not found`);

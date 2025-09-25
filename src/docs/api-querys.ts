@@ -24,5 +24,5 @@ export class ApiQueryStatusDto {
   @IsEnum(ReportStatus, {
     message: `Status must be one of the following values: ${Object.values(ReportStatus).join(', ')}`,
   })
-  status?: ReportStatus;
+  status_id?: ReportStatus;
 }

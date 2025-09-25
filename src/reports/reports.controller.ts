@@ -47,13 +47,13 @@ export class ReportsController {
     type: String,
     examples: {
       pendiente: {
-        value: 'pendiente',
+        value: '1',
       },
       aprobada: {
-        value: 'aprobada',
+        value: '2',
       },
       rechazada: {
-        value: 'rechazada',
+        value: '3',
       },
     },
   })
@@ -135,7 +135,7 @@ export class ReportsController {
   })
   @Get()
   async getReports(@Query() query: GetReportDto) {
-    return this.reportsService.getReports(query.status, query.id);
+    return this.reportsService.getReports(query.status_id, query.id);
   }
 
   @ApiConsumes('multipart/form-data')
@@ -161,7 +161,7 @@ export class ReportsController {
       title: rawBody.title,
       description: rawBody.description,
       created_by: rawBody.created_by,
-      status: rawBody.status,
+      status_id: rawBody.status_id,
       category: rawBody.category,
     });
 
@@ -213,6 +213,6 @@ export class ReportsController {
   @ApiOkResponse({ description: 'Count of reports', example: { count: 42 } })
   @Get('count')
   async countReports(@Query() query: ApiQueryStatusDto) {
-    return this.reportsService.countReports(query);
+    return this.reportsService.countReports({ status_id: query.status_id });
   }
 }

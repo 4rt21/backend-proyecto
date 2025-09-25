@@ -3,7 +3,7 @@ import { DbService } from 'src/db/db.service';
 import { PostReportDto } from './dtos/post-report-dto';
 import { DbResponse } from 'src/common/interfaces/db-response';
 import { QueryError, QueryResult, RowDataPacket } from 'mysql2';
-import { IsDateString, IsInt, IsString } from 'class-validator';
+import { IsDateString, IsInt, IsNumberString, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { GetReportCountDto, GetReportDto } from './dtos/get-report-dto';
 export class ReportDto {
@@ -57,7 +57,7 @@ export class ReportDto {
     example: 'pendiente',
     description: 'Current status of the report',
   })
-  @IsString()
+  @IsNumberString()
   status: string;
 }
 @Injectable()
@@ -66,7 +66,7 @@ export class ReportsRepository {
 
   async getAllReports(status?: string, id?: string) {
     const sql = `SELECT * FROM reports WHERE 1=1
-        ${status ? ` AND status = '${status}'` : ''}
+        ${status ? ` AND status_id = '${status}'` : ''}
         ${id ? ` AND id = '${id}'` : ''}`;
     const [rows] = await this.dbService.getPool().query<RowDataPacket[]>(sql);
     return rows.map((row) => ({
@@ -92,14 +92,14 @@ export class ReportsRepository {
     key: string,
   ): Promise<QueryResult | QueryError> {
     const sql =
-      'INSERT INTO reports (title, image, description, created_by, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())';
+      'INSERT INTO reports (title, image, description, created_by, status_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())';
 
     const params = [
       reportDto.title,
       key,
       reportDto.description,
       reportDto.created_by,
-      reportDto.status,
+      reportDto.status_id,
     ];
 
     const [result] = await this.dbService.getPool().query(sql, params);
@@ -123,18 +123,16 @@ export class ReportsRepository {
     query: GetReportCountDto,
   ): Promise<Record<string, number>> {
     const sql =
-      query.status == undefined
+      query.status_id == undefined
         ? 'SELECT COUNT(*) as count FROM reports'
-        : 'SELECT COUNT(*) as count FROM reports WHERE status = ?';
+        : 'SELECT COUNT(*) as count FROM reports WHERE status_id = ?';
     const [rows] = await this.dbService
       .getPool()
-      .query<RowDataPacket[]>(sql, [query.status]);
+      .query<RowDataPacket[]>(sql, [query.status_id]);
     return { count: rows[0].count as number };
   }
 
   async modifyReport(reportId: string, reportDto: any) {
-
-
     const keys = Object.keys(reportDto);
     const values = Object.values(reportDto);
 

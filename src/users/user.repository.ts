@@ -147,7 +147,7 @@ export class UserRepository {
           COUNT(r.id) AS count
     FROM all_statuses s
     LEFT JOIN reports r
-          ON r.status = s.status
+          ON r.status_id = s.status
           AND r.created_by = ?
     GROUP BY s.status
 

@@ -6,6 +6,7 @@ import {
   IsNumberString,
   isEnum,
   IsEnum,
+  isNumberString,
 } from 'class-validator';
 import { ReportStatus } from './get-report-dto';
 
@@ -25,10 +26,10 @@ export class PostReportDto {
   @ApiProperty({ example: 'user-123' })
   created_by: string;
 
-  @IsString()
+  @IsNumberString()
   @IsNotEmpty()
   @ApiProperty({ example: 'pendiente' })
-  status: string;
+  status_id: string;
 
   @IsNotEmpty()
   @IsNumberString()
