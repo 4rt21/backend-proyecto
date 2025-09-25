@@ -145,6 +145,7 @@ export class ReportsController {
   })
   @UseInterceptors(FileInterceptor('file'))
   @Post()
+  // ? validar la categoria y el usuario antes de crear el reporte
   async createReport(
     @Body() rawBody: any,
     @UploadedFile(
@@ -162,7 +163,7 @@ export class ReportsController {
       description: rawBody.description,
       created_by: rawBody.created_by,
       status_id: rawBody.status_id,
-      category: rawBody.category,
+      category: JSON.parse(rawBody.category),
     });
 
     const errors = await validate(body);
@@ -184,7 +185,7 @@ export class ReportsController {
   @Put(':id')
   @UseInterceptors(FileInterceptor('file'))
   async updateReport(
-    @Body() body: any,
+    @Body() rawBody: any,
     @Param('id') id: string,
     @UploadedFile(
       new ParseFilePipe({
@@ -197,6 +198,14 @@ export class ReportsController {
     )
     file: Express.Multer.File,
   ) {
+    const body = plainToClass(PostReportDto, {
+      title: rawBody.title,
+      description: rawBody.description,
+      created_by: rawBody.created_by,
+      status_id: rawBody.status_id,
+      category: JSON.parse(rawBody.category),
+    });
+
     return this.reportsService.updateReport(id, body, file);
   }
 

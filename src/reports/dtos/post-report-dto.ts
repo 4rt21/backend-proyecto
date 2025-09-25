@@ -7,8 +7,10 @@ import {
   isEnum,
   IsEnum,
   isNumberString,
+  IsArray,
 } from 'class-validator';
 import { ReportStatus } from './get-report-dto';
+import { Transform, Type } from 'class-transformer';
 
 export class PostReportDto {
   @IsString()
@@ -31,10 +33,11 @@ export class PostReportDto {
   @ApiProperty({ example: 'pendiente' })
   status_id: string;
 
-  @IsNotEmpty()
-  @IsNumberString()
-  @ApiProperty({ example: 1 })
-  category: number;
+  @IsArray()
+  @IsNumber({}, { each: true })
+  @Type(() => Number)
+  @ApiProperty({ example: [1, 2], description: 'Array of category IDs' })
+  category: number[];
 }
 
 export class PostReportWithFileDto extends PostReportDto {

@@ -29,29 +29,26 @@ export class ReportsService {
       throw new NotFoundException(`Report with ID ${id} not found`);
     }
 
-    const reportsWithUrls = await Promise.all(
-      reports.map(async (report) => ({
-        ...report,
-        image: await this.s3Service.getPresignedUrl(report.image),
-      })),
-    );
+    if (status_id && reports.length === 0) {
+      throw new NotFoundException(
+        `No reports found with status ID ${status_id}`,
+      );
+    }
 
-    return reportsWithUrls;
+    return reports;
   }
 
   async postReport(
     reportDto: PostReportDto,
     file: Express.Multer.File,
   ): Promise<number> {
-    const categoryId = await this.categoriesRepository.findById(
-      reportDto.category,
-    );
+    reportDto.category.map((id) => {
+      const doesCategoryExists = this.categoriesRepository.findById(id);
 
-    if (!categoryId) {
-      throw new NotFoundException(
-        `Category with ID ${reportDto.category} not found`,
-      );
-    }
+      if (!doesCategoryExists) {
+        throw new NotFoundException(`Category with ID ${id} not found`);
+      }
+    });
 
     const key = await this.imagesService.uploadFile(file, 'report-pictures');
 
@@ -77,10 +74,18 @@ export class ReportsService {
     );
   }
 
-  async postReportCategory(reportId: number, categoryId: number) {
-    return this.reportsCategoryRepository.createReportCategory(
+  async postReportCategory(reportId: number, categoryId: number[]) {
+    await Promise.all(
+      categoryId.map((id) => {
+        return this.reportsCategoryRepository.createReportCategory(
+          reportId,
+          id,
+        );
+      }),
+    );
+
+    return await this.reportsCategoryRepository.getCategoriesByReportId(
       reportId,
-      categoryId,
     );
   }
 
@@ -107,9 +112,22 @@ export class ReportsService {
       throw new NotFoundException(`Report with ID ${id} not found`);
     }
 
-    const path = await this.imagesService.modifyFile(report.image, file);
+    if (body.category) {
+      this.reportsCategoryRepository.updateReportCategory(
+        report.id,
+        body.category,
+      );
+    }
 
-    body = { ...body, image: path };
-    return this.reportsRepository.modifyReport(id, body);
+    if (file) {
+      const path = await this.imagesService.modifyFile(report.image, file);
+      body = { ...body, image: path };
+    }
+    console.log('body: ', body);
+    if (body.title || body.description || body.status_id) {
+      await this.reportsRepository.modifyReport(id, body);
+    }
+
+    return this.reportsRepository.findByReportId(id);
   }
 }
