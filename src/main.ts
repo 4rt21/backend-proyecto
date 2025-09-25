@@ -26,9 +26,9 @@ async function bootstrap() {
     credentials: true,
   });
 
-  const publicPath = path.join(__dirname, 'public');
+  const publicPath = path.join(__dirname, '..', 'public');
   app.useStaticAssets(publicPath);
-  
+
   const config = new DocumentBuilder()
     .setTitle('Endpoints de CRUD Usuarios')
     .setVersion('1.0')
