@@ -30,9 +30,10 @@ export class ImagesService {
       throw err;
     }
   }
+  
   async modifyFile(
-    filePath: string,
     file: Express.Multer.File,
+    filePath: string,
   ): Promise<string> {
     if (filePath === 'profile-pictures/default.jpg') {
       const folder = path.dirname(filePath);

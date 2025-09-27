@@ -16,56 +16,30 @@ import {
 } from '@nestjs/common';
 import { UserDto, UserService } from './users.service';
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
-  ApiConflictResponse,
   ApiOkResponse,
-  ApiProperty,
-  ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guards/jwt.auth.guard';
 import type { AuthenticatedRequest } from 'src/common/interfaces/authenticated-request';
 import { CreateUserOptionalDto } from 'src/admin/admin.controller';
-
 import { User } from './user.repository';
 import { PostReportDto } from 'src/reports/dtos/post-report-dto';
 import { ReportsService } from 'src/reports/reports.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsOptional,
-  MIN_LENGTH,
-  MinLength,
-  validate,
-} from 'class-validator';
+import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 import { ExceptionResponse } from 'src/common/interfaces/exception-responses/ExceptionResponse';
-import { MIN_PASSWORD_LENGTH } from 'src/common/constants';
-import e from 'express';
 import { UnauthorizedResponse } from 'src/common/interfaces/exception-responses/responses-examples';
-import { ChangePasswordDto } from 'src/Dtos/change-password-dto';
+import { ChangePasswordDto } from 'src/DTOS/change-password-dto';
+import {
+  ApiUserCreate,
+  CreateUserDto,
+  RegisterResponseDto,
+} from 'src/DTOS/user-controller/create-user-dto';
+import { ApiUserUpdate } from 'src/DTOS/user-controller/update-user-dto';
 
-export class CreateUserDto {
-  @ApiProperty({ example: 'name@domain.com' })
-  @IsNotEmpty()
-  @IsEmail()
-  email: string;
-  @ApiProperty({ example: 'name' })
-  @IsNotEmpty()
-  name: string;
-  @ApiProperty({ example: 'password123' })
-  @IsNotEmpty()
-  @MinLength(MIN_PASSWORD_LENGTH)
-  password: string;
-  @ApiProperty({ example: '1', default: '1' })
-  @IsOptional()
-  role_id: string = '1';
-}
-
-@ApiTags('user endpoint')
 @Controller('users')
 export class UserController {
   constructor(
@@ -75,6 +49,7 @@ export class UserController {
 
   @Post('register')
   @ApiBody({ type: CreateUserDto })
+  @ApiUserCreate()
   async registerUser(@Body() userDto: CreateUserDto): Promise<UserDto | void> {
     return this.userService.registerUser(
       userDto.email,
@@ -84,79 +59,30 @@ export class UserController {
     );
   }
 
-  @ApiBadRequestResponse({
-    description: 'No fields provided to update',
-    type: ExceptionResponse,
-  })
-  @ApiOkResponse({ description: 'User field updated successfully', type: User })
-  @ApiConflictResponse({ description: 'No user can have the same email' })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized user' })
-  @ApiBearerAuth()
+  @ApiUserUpdate()
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('file'))
   @Put()
   async partialUpdate(
     @Req() req: AuthenticatedRequest,
     @Body() userDto: CreateUserOptionalDto,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 1024 * 1024 }),
-          new FileTypeValidator({ fileType: 'image/*' }),
-        ],
-        fileIsRequired: false,
-      }),
-    )
-    file: Express.Multer.File,
   ) {
-    const body = plainToClass(CreateUserOptionalDto, {
-      email: userDto.email,
-      name: userDto.name,
-      username: userDto.username,
-    });
-
-    console.log('body: ', body);
-    console.log('file: ', file);
-    const errors = await validate(body);
-
-    if (errors.length > 0) {
-      throw new BadRequestException(errors);
-    }
-
-    this.userService.partialUpdate(req.user.profile.id, userDto, file);
+    return await this.userService.partialUpdate(req.user.profile.id, userDto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('file'))
   @Post('report')
   async postReport(
     @Req() req: AuthenticatedRequest,
-    @Body() rawBody: any,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 1024 * 1024 }),
-          new FileTypeValidator({ fileType: 'image/*' }),
-        ],
-      }),
-    )
-    file: Express.Multer.File,
+    @Body() body: PostReportDto,
   ) {
-    const body = plainToClass(PostReportDto, {
-      title: rawBody.title,
-      description: rawBody.description,
+    const sendBody: PostReportDto = {
+      ...body,
       created_by: req.user.profile.id,
-      status: rawBody.status,
-      category: rawBody.category,
-    });
+    };
 
-    const errors = await validate(body);
-    if (errors.length > 0) {
-      throw new BadRequestException(errors);
-    }
+    const reportId = await this.reportsService.postReport(sendBody);
 
-    const reportId = await this.reportsService.postReport(body, file);
-
+    console.log('reportId: ', reportId);
     const report_category = await this.reportsService.postReportCategory(
       reportId,
       body.category,
@@ -164,6 +90,8 @@ export class UserController {
 
     return { reportId, report_category };
   }
+
+
 
   @ApiUnauthorizedResponse({
     description: 'Unauthorized user',
@@ -221,4 +149,6 @@ export class UserController {
   async deleteUser(@Req() req: AuthenticatedRequest) {
     return this.userService.deleteUser(req.user.profile.id);
   }
+  
 }
+export { CreateUserDto };

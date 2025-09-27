@@ -1,9 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserOptionalDto } from 'src/admin/admin.controller';
 import { DbService } from 'src/db/db.service';
-import { CreateUserDto } from './user.controller';
 import { ApiProperty } from '@nestjs/swagger';
-import { sha256 } from 'src/util/crypto/hash.util';
 
 export class User {
   @ApiProperty({ example: '1' })
@@ -183,6 +181,6 @@ export class UserRepository {
   async deleteUserById(userId: string) {
     const sql = 'DELETE FROM users WHERE id = ?';
     const [rows] = await this.dbService.getPool().query(sql, [userId]);
-    return (rows as any).affectedRows > 0;
+    return { status: (rows as any).affectedRows > 0 };
   }
 }

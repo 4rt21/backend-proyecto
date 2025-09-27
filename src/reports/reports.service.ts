@@ -22,8 +22,12 @@ export class ReportsService {
     private readonly imagesService: ImagesService,
   ) {}
 
-  async getReports(status_id?: string, id?: string) {
-    const reports = await this.reportsRepository.getAllReports(status_id, id);
+  async getReports(status_id?: string, id?: string, page?: number) {
+    const reports = await this.reportsRepository.getAllReports(
+      status_id,
+      id,
+      page,
+    );
 
     if (id && reports.length === 0) {
       throw new NotFoundException(`Report with ID ${id} not found`);
@@ -38,10 +42,7 @@ export class ReportsService {
     return reports;
   }
 
-  async postReport(
-    reportDto: PostReportDto,
-    file: Express.Multer.File,
-  ): Promise<number> {
+  async postReport(reportDto: PostReportDto): Promise<number> {
     reportDto.category.map((id) => {
       const doesCategoryExists = this.categoriesRepository.findById(id);
 
@@ -50,28 +51,16 @@ export class ReportsService {
       }
     });
 
-    const key = await this.imagesService.uploadFile(file, 'report-pictures');
+    const result: any = await this.reportsRepository.createReport(reportDto);
 
-    if (!key) {
+    if (typeof result !== 'object' && !('insertId' in result)) {
       throw new HttpException(
-        'File upload failed',
+        'Report creation failed',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
-    const result: any = await this.reportsRepository.createReport(
-      reportDto,
-      key,
-    );
-
-    if (typeof result === 'object' && 'insertId' in result) {
-      return result.insertId;
-    }
-
-    throw new HttpException(
-      'Report creation failed',
-      HttpStatus.INTERNAL_SERVER_ERROR,
-    );
+    return result.insertId;
   }
 
   async postReportCategory(reportId: number, categoryId: number[]) {
@@ -120,7 +109,7 @@ export class ReportsService {
     }
 
     if (file) {
-      const path = await this.imagesService.modifyFile(report.image, file);
+      const path = await this.imagesService.modifyFile(report.image, 'file');
       body = { ...body, image: path };
     }
     console.log('body: ', body);

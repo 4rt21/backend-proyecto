@@ -135,7 +135,7 @@ export class ReportsController {
   })
   @Get()
   async getReports(@Query() query: GetReportDto) {
-    return this.reportsService.getReports(query.status_id, query.id);
+    return this.reportsService.getReports(query.status_id, query.id, query.page);
   }
 
   @ApiConsumes('multipart/form-data')
@@ -172,7 +172,7 @@ export class ReportsController {
       throw new BadRequestException(errors);
     }
 
-    const reportId = await this.reportsService.postReport(body, file);
+    const reportId = await this.reportsService.postReport(body);
 
     const report_category = await this.reportsService.postReportCategory(
       reportId,

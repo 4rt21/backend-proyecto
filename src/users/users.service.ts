@@ -126,7 +126,6 @@ export class UserService {
   async partialUpdate(
     id: string,
     dtoUserOptional: CreateUserOptionalDto,
-    file?: Express.Multer.File,
   ): Promise<User> {
     if (isNaN(Number(id))) {
       throw new BadRequestException('Id must be a number');
@@ -141,23 +140,11 @@ export class UserService {
     if (dtoUserOptional.username !== undefined)
       updates.username = dtoUserOptional.username;
 
-    if (Object.keys(updates).length === 0 && !file) {
-      throw new BadRequestException('No fields provided to update');
-    }
-
     if (updates.email) {
       const existingUser = await this.userRepository.findByEmail(updates.email);
       if (existingUser && existingUser.id !== id) {
         throw new ConflictException('Email already exists');
       }
-    }
-
-    if (file) {
-      const filepath = await this.imagesService.modifyFile(
-        userToUpdate.image_path!,
-        file,
-      );
-      updates.image_path = filepath;
     }
 
     return this.userRepository.partialUpdate(id, updates);
@@ -168,6 +155,10 @@ export class UserService {
   }
 
   async deleteUser(userId: string) {
+    const user = await this.userRepository.findById(userId);
+
+    this.imagesService.deleteFile(user.image_path!);
+
     return await this.userRepository.deleteUserById(userId);
   }
 }

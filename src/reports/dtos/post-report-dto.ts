@@ -8,6 +8,7 @@ import {
   IsEnum,
   isNumberString,
   IsArray,
+  IsOptional,
 } from 'class-validator';
 import { ReportStatus } from './get-report-dto';
 import { Transform, Type } from 'class-transformer';
@@ -18,15 +19,23 @@ export class PostReportDto {
   @ApiProperty({ example: 'Reporte de pagina fraudulenta' })
   title: string;
 
+
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ example: '/images/reports/potholes.png' })
+  image: string;
+
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ example: 'Solicitan informacion personal' })
   description: string;
 
   @IsString()
+  @IsOptional()
   @IsNotEmpty()
   @ApiProperty({ example: 'user-123' })
-  created_by: string;
+  created_by?: string;
 
   @IsNumberString()
   @IsNotEmpty()

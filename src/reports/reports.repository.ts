@@ -64,10 +64,12 @@ export class ReportDto {
 export class ReportsRepository {
   constructor(private readonly dbService: DbService) {}
 
-  async getAllReports(status?: string, id?: string) {
+  async getAllReports(status?: string, id?: string, page?: number) {
     const sql = `SELECT * FROM reports WHERE 1=1
         ${status ? ` AND status_id = '${status}'` : ''}
-        ${id ? ` AND id = '${id}'` : ''}`;
+        ${id ? ` AND id = '${id}'` : ''}
+        ${page ? ` LIMIT ${(Number(page) - 1) * 10}, 10` : ''}`;
+
     const [rows] = await this.dbService.getPool().query<RowDataPacket[]>(sql);
     return rows.map((row) => ({
       id: row.id,
@@ -89,14 +91,13 @@ export class ReportsRepository {
 
   async createReport(
     reportDto: PostReportDto,
-    key: string,
   ): Promise<QueryResult | QueryError> {
     const sql =
       'INSERT INTO reports (title, image, description, created_by, status_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())';
 
     const params = [
       reportDto.title,
-      key,
+      reportDto.image,
       reportDto.description,
       reportDto.created_by,
       reportDto.status_id,
