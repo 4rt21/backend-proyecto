@@ -9,6 +9,7 @@ import {
   FileTypeValidator,
   Param,
   Put,
+  BadRequestException,
 } from '@nestjs/common';
 import { ImagesService } from './images.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -32,28 +33,33 @@ export class ImagesController {
     file: Express.Multer.File,
     @Param('folder') folder: string,
   ) {
-    console.log('folder: ', folder);
     return this.imagesService.uploadFile(file, folder);
   }
 
-  @Put()
+  @Put(':folder/:path')
+  @UseInterceptors(FileInterceptor('file'))
   async modifyFile(
     @UploadedFile(
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({ maxSize: 1024 * 1024 }),
-          new FileTypeValidator({ fileType: 'image/*' }),
+          new FileTypeValidator({
+            fileType: /^image\/(jpeg|jpg|png|gif|webp)$/,
+          }),
         ],
       }),
     )
     file: Express.Multer.File,
-    @Param() folder: string,
+    @Param('folder') folder: string,
+    @Param('path') path: string,
   ) {
-    return this.imagesService.modifyFile(file, folder);
+    const filepath = `${folder}/${path}`;
+    return this.imagesService.modifyFile(file, filepath);
   }
 
-  @Delete(':filePath')
-  async deleteFile(@Param('filePath') filePath: string) {
-    return this.imagesService.deleteFile(filePath);
+  @Delete(':path')
+  async deleteFile(@Param('path') path: string) {
+    console.log(path);
+    return this.imagesService.deleteFile(path);
   }
 }

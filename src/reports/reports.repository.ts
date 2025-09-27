@@ -134,7 +134,7 @@ export class ReportsRepository {
   }
 
   async modifyReport(reportId: string, reportDto: any) {
-    const ALLOWED_COLUMNS = ['title', 'description', 'status', 'updated_at'];
+    const ALLOWED_COLUMNS = ['title', 'description', 'status', 'updated_at', 'image'];
 
 
     const keys = Object.keys(reportDto).filter(

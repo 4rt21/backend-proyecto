@@ -83,7 +83,7 @@ export class UserController {
 
     const reportId = await this.reportsService.postReport(sendBody);
 
-    console.log('reportId: ', reportId);
+
     const report_category = await this.reportsService.postReportCategory(
       reportId,
       body.category,
