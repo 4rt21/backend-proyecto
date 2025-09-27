@@ -17,6 +17,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { UpvotesModule } from './upvotes/upvotes.module';
 import { ImagesService } from './images/images.service';
 import { ImagesModule } from './images/images.module';
+import { StatusModule } from './status/status.module';
 @Module({
   imports: [
     JwtModule.register({
@@ -35,6 +36,7 @@ import { ImagesModule } from './images/images.module';
     NotificationsModule,
     UpvotesModule,
     ImagesModule,
+    StatusModule,
   ],
   controllers: [AppController],
   providers: [AppService, ImagesService],

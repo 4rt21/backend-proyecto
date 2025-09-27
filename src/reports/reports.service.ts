@@ -94,7 +94,7 @@ export class ReportsService {
     return this.reportsRepository.deleteReport(id);
   }
 
-  async updateReport(id: string, body: any, file: Express.Multer.File) {
+  async updateReport(id: string, body: UpdateReportDTO) {
     const report = await this.reportsRepository.findByReportId(id);
 
     if (!report) {
@@ -102,21 +102,20 @@ export class ReportsService {
     }
 
     if (body.category) {
-      this.reportsCategoryRepository.updateReportCategory(
+      await this.reportsCategoryRepository.updateReportCategory(
         report.id,
         body.category,
       );
     }
 
-    if (file) {
-      const path = await this.imagesService.modifyFile(report.image, 'file');
-      body = { ...body, image: path };
-    }
-    console.log('body: ', body);
-    if (body.title || body.description || body.status_id) {
+    if (body.title || body.description || body.status_id || body.image) {
       await this.reportsRepository.modifyReport(id, body);
     }
 
-    return this.reportsRepository.findByReportId(id);
+    const updatedReport = await this.reportsRepository.findByReportId(id);
+
+    const categories =
+      await this.reportsCategoryRepository.getCategoriesByReportId(report.id);
+    return { report: updatedReport, categories };
   }
 }

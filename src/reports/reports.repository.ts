@@ -134,19 +134,30 @@ export class ReportsRepository {
   }
 
   async modifyReport(reportId: string, reportDto: any) {
-    const keys = Object.keys(reportDto);
-    const values = Object.values(reportDto);
+    const ALLOWED_COLUMNS = ['title', 'description', 'status', 'updated_at'];
 
+
+    const keys = Object.keys(reportDto).filter(
+      (key) =>
+        ALLOWED_COLUMNS.includes(key) &&
+        reportDto[key] !== null &&
+        reportDto[key] !== undefined,
+    );
+
+    if (keys.length === 0) {
+      throw new Error('No valid columns to update');
+    }
+
+    const values = keys.map((key) => reportDto[key]);
     const setClause = keys.map((key) => `${key} = ?`).join(', ');
 
     const query = `
-            UPDATE reports
-            SET ${setClause}
-            WHERE id = ?
-        `;
+    UPDATE reports
+    SET ${setClause}
+    WHERE id = ?
+  `;
 
     const params = [...values, reportId];
-
     const [result] = await this.dbService.getPool().query(query, params);
     return result;
   }

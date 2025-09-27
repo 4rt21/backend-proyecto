@@ -39,6 +39,7 @@ import {
   RegisterResponseDto,
 } from 'src/DTOS/user-controller/create-user-dto';
 import { ApiUserUpdate } from 'src/DTOS/user-controller/update-user-dto';
+import { UpdateReportDTO } from 'src/reports/dtos/update-report-dto';
 
 @Controller('users')
 export class UserController {
@@ -91,7 +92,27 @@ export class UserController {
     return { reportId, report_category };
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Put('report')
+  async updateReport(
+    @Req() req: AuthenticatedRequest,
+    @Body() body: UpdateReportDTO,
+  ) {
+    if (
+      body.category === undefined &&
+      body.description === undefined &&
+      body.status_id === undefined &&
+      body.title === undefined &&
+      body.image === undefined
+    ) {
+      throw new BadRequestException(
+        'At least one field must be provided for update',
+      );
+    }
 
+    const id = req.user.profile.id;
+    return await this.reportsService.updateReport(id, body);
+  }
 
   @ApiUnauthorizedResponse({
     description: 'Unauthorized user',
@@ -149,6 +170,5 @@ export class UserController {
   async deleteUser(@Req() req: AuthenticatedRequest) {
     return this.userService.deleteUser(req.user.profile.id);
   }
-  
 }
 export { CreateUserDto };

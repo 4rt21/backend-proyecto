@@ -20,7 +20,6 @@ export class PostReportDto {
   title: string;
 
 
-
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ example: '/images/reports/potholes.png' })

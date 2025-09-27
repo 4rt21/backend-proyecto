@@ -1,23 +1,17 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
-  FileTypeValidator,
   Get,
-  MaxFileSizeValidator,
-  ParseFilePipe,
   Post,
   Put,
   Query,
-  UploadedFile,
-  UseInterceptors,
   Param,
+  BadRequestException,
 } from '@nestjs/common';
 import { ReportsService } from './reports.service';
-import { FileInterceptor } from '@nestjs/platform-express';
 import {
-  GetReportCountDto,
+  ApiReportGet,
   GetReportDto,
   ReportStatus,
 } from './dtos/get-report-dto';
@@ -25,155 +19,35 @@ import { PostReportDto, PostReportWithFileDto } from './dtos/post-report-dto';
 import {
   ApiBadRequestResponse,
   ApiBody,
-  ApiConsumes,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiQuery,
 } from '@nestjs/swagger';
-import { validate } from 'class-validator';
-import { plainToClass } from 'class-transformer';
-import { UpdateReportDTO } from './dtos/update-report-dto';
 import { NotFoundResponse } from 'src/common/interfaces/exception-responses/responses-examples';
 import { ApiQueryStatusDto } from 'src/docs/api-querys';
+import { UpdateReportDTO } from './dtos/update-report-dto';
 
 @Controller('reports')
 export class ReportsController {
   constructor(private readonly reportsService: ReportsService) {}
 
-  @ApiQuery({
-    enum: ReportStatus,
-    required: false,
-    name: 'status',
-    type: String,
-    examples: {
-      pendiente: {
-        value: '1',
-      },
-      aprobada: {
-        value: '2',
-      },
-      rechazada: {
-        value: '3',
-      },
-    },
-  })
-  @ApiQuery({
-    name: 'id',
-    required: false,
-    type: String,
-    examples: {
-      valid: {
-        value: '123',
-      },
-      invalid: {
-        value: 'abc',
-      },
-    },
-  })
-  @ApiOkResponse({
-    description: 'List of reports retrieved successfully.',
-    example: [
-      {
-        id: 1,
-        title: 'Potholes in Main Street',
-        image: '/images/reports/potholes.png',
-        description: 'Large potholes making driving dangerous.',
-        created_at: '2025-09-18T04:55:18.000Z',
-        updated_at: '2025-09-18T04:55:18.000Z',
-        created_by: 1,
-        status: 'pendiente',
-      },
-      {
-        id: 2,
-        title: 'Broken Street Lights',
-        image: '/images/reports/streetlights.png',
-        description: 'Many street lights are broken in downtown.',
-        created_at: '2025-09-18T04:55:18.000Z',
-        updated_at: '2025-09-18T04:55:18.000Z',
-        created_by: 2,
-        status: 'aprobada',
-      },
-      {
-        id: 3,
-        title: 'Water Contamination',
-        image: '/images/reports/water.png',
-        description: 'Water samples show contamination in area X.',
-        created_at: '2025-09-18T04:55:18.000Z',
-        updated_at: '2025-09-18T04:55:18.000Z',
-        created_by: 3,
-        status: 'rechazada',
-      },
-    ],
-  })
-  @ApiBadRequestResponse({
-    description: 'Invalid query parameters.',
-    content: {
-      'application/json': {
-        examples: {
-          invalidStatus: {
-            value: {
-              message:
-                'Status must be one of the following values: pendiente, aprobada, rechazada',
-              error: 'Bad Request',
-              statusCode: 400,
-            },
-          },
-          invalidId: {
-            value: {
-              message: 'ID must be a positive integer',
-              error: 'Bad Request',
-              statusCode: 400,
-            },
-          },
-        },
-      },
-    },
-  })
-  @ApiNotFoundResponse({
-    description: 'Report with specified ID not found.',
-    example: NotFoundResponse.userNotFound.value,
-  })
+  @ApiReportGet()
   @Get()
   async getReports(@Query() query: GetReportDto) {
-    return this.reportsService.getReports(query.status_id, query.id, query.page);
+    return this.reportsService.getReports(
+      query.status_id,
+      query.id,
+      query.page,
+    );
   }
 
-  @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'Create Report',
     type: PostReportWithFileDto,
   })
-  @UseInterceptors(FileInterceptor('file'))
   @Post()
-  // ? validar la categoria y el usuario antes de crear el reporte
-  async createReport(
-    @Body() rawBody: any,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 1024 * 1024 }),
-          new FileTypeValidator({ fileType: 'image/*' }),
-        ],
-      }),
-    )
-    file: Express.Multer.File,
-  ) {
-    const body = plainToClass(PostReportDto, {
-      title: rawBody.title,
-      description: rawBody.description,
-      created_by: rawBody.created_by,
-      status_id: rawBody.status_id,
-      category: JSON.parse(rawBody.category),
-    });
-
-    const errors = await validate(body);
-
-    if (errors.length > 0) {
-      throw new BadRequestException(errors);
-    }
-
+  async createReport(@Body() body: PostReportDto) {
     const reportId = await this.reportsService.postReport(body);
-
     const report_category = await this.reportsService.postReportCategory(
       reportId,
       body.category,
@@ -183,38 +57,27 @@ export class ReportsController {
   }
 
   @Put(':id')
-  @UseInterceptors(FileInterceptor('file'))
-  async updateReport(
-    @Body() rawBody: any,
-    @Param('id') id: string,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 1024 * 1024 }),
-          new FileTypeValidator({ fileType: 'image/*' }),
-        ],
-        fileIsRequired: false,
-      }),
-    )
-    file: Express.Multer.File,
-  ) {
-    const body = plainToClass(PostReportDto, {
-      title: rawBody.title,
-      description: rawBody.description,
-      created_by: rawBody.created_by,
-      status_id: rawBody.status_id,
-      category: JSON.parse(rawBody.category),
-    });
-
-    return this.reportsService.updateReport(id, body, file);
+  async updateReport(@Body() body: UpdateReportDTO, @Param('id') id: string) {
+    if (
+      body.category === undefined &&
+      body.description === undefined &&
+      body.status_id === undefined &&
+      body.title === undefined &&
+      body.image === undefined
+    ) {
+      throw new BadRequestException(
+        'At least one field must be provided for update',
+      );
+    }
+    return await this.reportsService.updateReport(id, body);
   }
 
-  @Delete(':id')
   @ApiNotFoundResponse({
     description: 'Report not found',
     example: NotFoundResponse.userNotFound.value,
   })
   @ApiOkResponse({ description: 'Report deleted successfully', example: true })
+  @Delete(':id')
   async deleteReport(@Param('id') id: string) {
     return this.reportsService.deleteReport(id);
   }
