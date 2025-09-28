@@ -88,6 +88,7 @@ export class ReportsRepository {
         updated_at: row.updated_at,
         created_by: row.created_by,
         status: row.status,
+        report_url: row.report_url,
         categories:
           await this.reportsCategoryRepository.getCategoriesByReportId(row.id),
       })),
