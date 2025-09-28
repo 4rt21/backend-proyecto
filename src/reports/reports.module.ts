@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ReportsController } from './reports.controller';
 import { ReportsService } from './reports.service';
 import { ReportsRepository } from './reports.repository';
-import { S3Service } from 'src/s3/s3.service';
 import { ReportsCategoryRepository } from 'src/reports_category/reports-category-repository';
 import { CategoriesRepository } from 'src/categories/categories.repository';
 import { ImagesService } from 'src/images/images.service';
@@ -12,7 +11,6 @@ import { ImagesService } from 'src/images/images.service';
   providers: [
     ReportsService,
     ReportsRepository,
-    S3Service,
     ReportsCategoryRepository,
     CategoriesRepository,
     ImagesService,

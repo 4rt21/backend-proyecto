@@ -9,6 +9,7 @@ import {
   isNumberString,
   IsArray,
   IsOptional,
+  IsUrl,
 } from 'class-validator';
 import { ReportStatus } from './get-report-dto';
 import { Transform, Type } from 'class-transformer';
@@ -18,7 +19,6 @@ export class PostReportDto {
   @IsNotEmpty()
   @ApiProperty({ example: 'Reporte de pagina fraudulenta' })
   title: string;
-
 
   @IsString()
   @IsNotEmpty()
@@ -46,6 +46,9 @@ export class PostReportDto {
   @Type(() => Number)
   @ApiProperty({ example: [1, 2], description: 'Array of category IDs' })
   category: number[];
+
+  @IsUrl()
+  report_url: string;
 }
 
 export class PostReportWithFileDto extends PostReportDto {

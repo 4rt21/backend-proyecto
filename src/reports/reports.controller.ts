@@ -63,7 +63,8 @@ export class ReportsController {
       body.description === undefined &&
       body.status_id === undefined &&
       body.title === undefined &&
-      body.image === undefined
+      body.image === undefined &&
+      body.report_url === undefined
     ) {
       throw new BadRequestException(
         'At least one field must be provided for update',

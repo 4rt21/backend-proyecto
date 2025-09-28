@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsArray, IsNumber, IsOptional } from 'class-validator';
+import { IsArray, IsNumber, IsOptional, IsUrl } from 'class-validator';
 
 export class UpdateReportDTO {
   @IsOptional()
@@ -21,4 +21,8 @@ export class UpdateReportDTO {
 
   @IsOptional()
   image: string;
+
+  @IsUrl()
+  @IsOptional()
+  report_url: string;
 }

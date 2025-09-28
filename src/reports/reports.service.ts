@@ -108,7 +108,7 @@ export class ReportsService {
       );
     }
 
-    if (body.title || body.description || body.status_id || body.image) {
+    if (body.title || body.description || body.status_id || body.image || body.report_url) {
       await this.reportsRepository.modifyReport(id, body);
     }
 
