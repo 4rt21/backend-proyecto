@@ -69,7 +69,8 @@ export class ReportsRepository {
   ) {}
 
   async getAllReports(status?: string, id?: string, page?: number) {
-    const sql = `SELECT * FROM reports 
+    const sql = `SELECT *, u.name as user_name FROM reports
+        JOIN users u ON reports.created_by = u.id
         WHERE 1=1
         ${status ? ` AND status_id = '${status}'` : ''}
         ${id ? ` AND id = '${id}'` : ''}
@@ -86,6 +87,7 @@ export class ReportsRepository {
         description: row.description,
         created_at: row.created_at,
         updated_at: row.updated_at,
+        user_name: row.user_name,
         created_by: row.created_by,
         status: row.status,
         report_url: row.report_url,
