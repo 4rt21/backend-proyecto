@@ -69,16 +69,25 @@ export class ReportsRepository {
   ) {}
 
   async getAllReports(status?: string, id?: string, page?: number) {
-    const sql = `SELECT *, u.name as user_name FROM reports
-        JOIN users u ON reports.created_by = u.id
+    const sql = `SELECT r.id,
+         r.title,
+         r.image,
+         r.description,
+         r.created_at,
+         r.updated_at,
+         r.created_by,
+         r.report_url, 
+         u.name as user_name 
+        FROM reports r
+        JOIN users u ON r.created_by = u.id
         WHERE 1=1
         ${status ? ` AND status_id = '${status}'` : ''}
         ${id ? ` AND id = '${id}'` : ''}
         ${page ? ` LIMIT ${(Number(page) - 1) * 10}, 10` : ''}
+        ORDER BY r.created_at ASC
         `;
 
     const [rows] = await this.dbService.getPool().query<RowDataPacket[]>(sql);
-
     return Promise.all(
       rows.map(async (row) => ({
         id: row.id,
