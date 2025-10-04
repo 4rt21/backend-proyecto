@@ -137,19 +137,13 @@ export class UserRepository {
 
   async getPostsInfoByUserId(userId: string): Promise<any> {
     const sql = `
-     WITH all_statuses AS (
-      SELECT 'pendiente' AS status
-      UNION ALL SELECT 'aprobado'
-      UNION ALL SELECT 'rechazado'
-    )
-      
-    SELECT s.status AS info_row, 
+    SELECT s.status   AS info_row,
           COUNT(r.id) AS count
-    FROM all_statuses s
+    FROM status s
     LEFT JOIN reports r
-          ON r.status_id = s.status
+          ON r.status_id = s.id
           AND r.created_by = ?
-    GROUP BY s.status
+    GROUP BY s.id
 
     UNION ALL
 

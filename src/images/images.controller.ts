@@ -10,6 +10,7 @@ import {
   Param,
   Put,
   BadRequestException,
+  Body,
 } from '@nestjs/common';
 import { ImagesService } from './images.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -42,9 +43,9 @@ export class ImagesController {
     @UploadedFile(
       new ParseFilePipe({
         validators: [
-          new MaxFileSizeValidator({ maxSize: 1024 * 1024 }),
+          new MaxFileSizeValidator({ maxSize: 10240 * 10240 }),
           new FileTypeValidator({
-            fileType: /^image\/(jpeg|jpg|png|gif|webp)$/,
+            fileType: 'image/*',
           }),
         ],
       }),
@@ -57,9 +58,8 @@ export class ImagesController {
     return this.imagesService.modifyFile(file, filepath);
   }
 
-  @Delete(':path')
-  async deleteFile(@Param('path') path: string) {
-    console.log(path);
+  @Delete()
+  async deleteFile(@Body('path') path: string) {
     return this.imagesService.deleteFile(path);
   }
 }

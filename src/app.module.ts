@@ -9,7 +9,6 @@ import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { adminModule } from './admin/admin.module';
 import { ReportsModule } from './reports/reports.module';
-import { S3Module } from './s3/s3.module';
 import { ReportsCategoryModule } from './reports_category/reports-category.module';
 import { CategoriesModule } from './categories/categories.module';
 import { RolesModule } from './roles/roles.module';
@@ -29,7 +28,6 @@ import { StatusModule } from './status/status.module';
     AuthModule,
     adminModule,
     ReportsModule,
-    S3Module,
     ReportsCategoryModule,
     CategoriesModule,
     RolesModule,

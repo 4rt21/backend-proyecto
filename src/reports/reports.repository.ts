@@ -76,8 +76,10 @@ export class ReportsRepository {
          r.created_at,
          r.updated_at,
          r.created_by,
+         r.status_id,
          r.report_url, 
-         u.name as user_name 
+         u.name as user_name,
+         u.image_path as user_image
         FROM reports r
         JOIN users u ON r.created_by = u.id
         WHERE 1=1

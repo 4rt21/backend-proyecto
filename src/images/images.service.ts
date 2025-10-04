@@ -5,7 +5,10 @@ import { randomName } from 'src/util/crypto/hash.util';
 
 @Injectable()
 export class ImagesService {
-  async uploadFile(file: Express.Multer.File, folder: string): Promise<string> {
+  async uploadFile(
+    file: Express.Multer.File,
+    folder: string,
+  ): Promise<Record<string, string>> {
     const projectFolder = path.join(__dirname, '..', '..', 'public', folder);
     await fs.promises.mkdir(projectFolder, { recursive: true });
 
@@ -14,7 +17,7 @@ export class ImagesService {
     const filePath = path.join(projectFolder, `${key}${ext}`);
 
     await fs.promises.writeFile(filePath, file.buffer);
-    return path.join(folder, `${key}${ext}`);
+    return { path: path.join(folder, `${key}${ext}`) };
   }
 
   async deleteFile(filePath: string): Promise<void> {
@@ -30,11 +33,11 @@ export class ImagesService {
       throw err;
     }
   }
-  
+
   async modifyFile(
     file: Express.Multer.File,
     filePath: string,
-  ): Promise<string> {
+  ): Promise<Record<string, string>> {
     if (filePath === 'profile-pictures/default.jpg') {
       const folder = path.dirname(filePath);
       const newFilePath = await this.uploadFile(file, folder);

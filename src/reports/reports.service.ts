@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ReportsRepository } from './reports.repository';
-import { S3Service } from 'src/s3/s3.service';
+
 import { PostReportDto } from './dtos/post-report-dto';
 import { ReportsCategoryRepository } from 'src/reports_category/reports-category-repository';
 import { CategoriesRepository } from 'src/categories/categories.repository';
@@ -16,7 +16,6 @@ import { ImagesService } from 'src/images/images.service';
 export class ReportsService {
   constructor(
     private readonly reportsRepository: ReportsRepository,
-    private readonly s3Service: S3Service,
     private readonly reportsCategoryRepository: ReportsCategoryRepository,
     private readonly categoriesRepository: CategoriesRepository,
     private readonly imagesService: ImagesService,
@@ -108,7 +107,13 @@ export class ReportsService {
       );
     }
 
-    if (body.title || body.description || body.status_id || body.image || body.report_url) {
+    if (
+      body.title ||
+      body.description ||
+      body.status_id ||
+      body.image ||
+      body.report_url
+    ) {
       await this.reportsRepository.modifyReport(id, body);
     }
 
