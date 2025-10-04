@@ -100,6 +100,7 @@ export class ReportsRepository {
         updated_at: row.updated_at,
         user_name: row.user_name,
         created_by: row.created_by,
+        user_image: row.user_image,
         status: row.status,
         report_url: row.report_url,
         categories:
