@@ -101,7 +101,7 @@ export class ReportsRepository {
         user_name: row.user_name,
         created_by: row.created_by,
         user_image: row.user_image,
-        status: row.status,
+        status_id: row.status_id,
         report_url: row.report_url,
         categories:
           await this.reportsCategoryRepository.getCategoriesByReportId(row.id),
