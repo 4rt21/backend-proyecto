@@ -87,6 +87,7 @@ export function ApiUserCreate() {
     }),
     ApiResponse({
       status: 400,
+      description: 'Fields missing or validation error',
       examples: {
         noName: {
           summary: 'No name provided',

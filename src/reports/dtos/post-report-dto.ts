@@ -48,6 +48,7 @@ export class PostReportDto {
   category: number[];
 
   @IsUrl()
+  @ApiProperty({ example: 'http://example.com/report/123' })
   report_url: string;
 }
 

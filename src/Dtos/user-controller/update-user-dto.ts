@@ -1,7 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { ExceptionResponse } from 'src/common/interfaces/exception-responses/ExceptionResponse';
-import { UnauthorizedResponse } from 'src/common/interfaces/exception-responses/responses-examples';
+import { BadRequestExample, ConflictResponse, UnauthorizedResponse } from 'src/common/interfaces/exception-responses/responses-examples';
 import { User } from 'src/users/user.repository';
 
 export function ApiUserUpdate() {
@@ -15,7 +15,7 @@ export function ApiUserUpdate() {
     ApiResponse({
       status: 400,
       description: 'No fields provided to update',
-      type: ExceptionResponse,
+      example: BadRequestExample.nofieldsToUpdate.value,
     }),
     ApiResponse({
       status: 401,
@@ -25,6 +25,7 @@ export function ApiUserUpdate() {
     ApiResponse({
       status: 409,
       description: 'No user can have the same email',
+      example: ConflictResponse.sameEmail.value,
     }),
   );
 }

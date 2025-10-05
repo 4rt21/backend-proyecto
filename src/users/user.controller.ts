@@ -3,16 +3,12 @@ import {
   Body,
   Controller,
   Delete,
-  FileTypeValidator,
   Get,
-  MaxFileSizeValidator,
-  ParseFilePipe,
   Post,
   Put,
   Req,
-  UploadedFile,
   UseGuards,
-  UseInterceptors,
+
 } from '@nestjs/common';
 import { UserDto, UserService } from './users.service';
 import {
@@ -27,16 +23,13 @@ import { CreateUserOptionalDto } from 'src/admin/admin.controller';
 import { User } from './user.repository';
 import { PostReportDto } from 'src/reports/dtos/post-report-dto';
 import { ReportsService } from 'src/reports/reports.service';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { validate } from 'class-validator';
-import { plainToClass } from 'class-transformer';
+
 import { ExceptionResponse } from 'src/common/interfaces/exception-responses/ExceptionResponse';
 import { UnauthorizedResponse } from 'src/common/interfaces/exception-responses/responses-examples';
 import { ChangePasswordDto } from 'src/DTOS/change-password-dto';
 import {
   ApiUserCreate,
   CreateUserDto,
-  RegisterResponseDto,
 } from 'src/DTOS/user-controller/create-user-dto';
 import { ApiUserUpdate } from 'src/DTOS/user-controller/update-user-dto';
 import { UpdateReportDTO } from 'src/reports/dtos/update-report-dto';
