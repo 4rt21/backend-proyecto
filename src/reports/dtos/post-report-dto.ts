@@ -30,11 +30,15 @@ export class PostReportDto {
   @ApiProperty({ example: 'Solicitan informacion personal' })
   description: string;
 
-  @IsString()
+  @IsNumber()
   @IsOptional()
   @IsNotEmpty()
-  @ApiProperty({ example: 'user-123' })
-  created_by?: string;
+  @ApiProperty({
+    example: 1,
+    description: 'User ID of the creator',
+    required: false,
+  })
+  created_by?: number;
 
   @IsNumber()
   @IsNotEmpty()

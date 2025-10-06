@@ -71,7 +71,7 @@ export class UserController {
   ) {
     const sendBody: PostReportDto = {
       ...body,
-      created_by: req.user.profile.id,
+      created_by: Number(req.user.profile.id),
     };
 
     const reportId = await this.reportsService.postReport(sendBody);
