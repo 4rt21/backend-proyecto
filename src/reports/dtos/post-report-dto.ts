@@ -36,10 +36,10 @@ export class PostReportDto {
   @ApiProperty({ example: 'user-123' })
   created_by?: string;
 
-  @IsNumberString()
+  @IsNumber()
   @IsNotEmpty()
-  @ApiProperty({ example: 'pendiente' })
-  status_id: string;
+  @ApiProperty({ example: 1, description: 'Status ID of the report' })
+  status_id: number;
 
   @IsArray()
   @IsNumber({}, { each: true })
@@ -50,13 +50,4 @@ export class PostReportDto {
   @IsUrl()
   @ApiProperty({ example: 'http://example.com/report/123' })
   report_url: string;
-}
-
-export class PostReportWithFileDto extends PostReportDto {
-  @ApiProperty({
-    type: 'string',
-    format: 'binary',
-    description: 'Report image file',
-  })
-  file: any;
 }

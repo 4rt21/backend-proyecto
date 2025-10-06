@@ -15,7 +15,7 @@ import {
   GetReportDto,
   ReportStatus,
 } from './dtos/get-report-dto';
-import { PostReportDto, PostReportWithFileDto } from './dtos/post-report-dto';
+import { PostReportDto } from './dtos/post-report-dto';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -43,7 +43,7 @@ export class ReportsController {
 
   @ApiBody({
     description: 'Create Report',
-    type: PostReportWithFileDto,
+    type: PostReportDto,
   })
   @Post()
   async createReport(@Body() body: PostReportDto) {
