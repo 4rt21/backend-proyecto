@@ -1,31 +1,34 @@
-import { ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
-import { CanActivate } from "@nestjs/common";
-import { Request } from "express";
-import { TokensService } from "src/auth/tokens.service";
-import { AuthenticatedRequest } from "../interfaces/authenticated-request";
+import {
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { CanActivate } from '@nestjs/common';
+import { Request } from 'express';
+import { TokensService } from 'src/auth/tokens.service';
+import { AuthenticatedRequest } from '../interfaces/authenticated-request';
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
+  constructor(private readonly tokenService: TokensService) {}
+  async canActivate(ctx: ExecutionContext): Promise<boolean> {
+    const request = ctx.switchToHttp().getRequest<Request>();
+    const auth = request.headers.authorization ?? '';
 
-    constructor(private readonly tokenService: TokensService) {}
-    async canActivate(ctx: ExecutionContext): Promise<boolean> {
-        const request = ctx.switchToHttp().getRequest<Request>();
-        const auth = request.headers.authorization ?? "";
+    const [schema, token] = auth.split(' ');
 
-        const [schema, token] = auth.split(" ");
+    if (schema !== 'Bearer' || !token)
+      throw new UnauthorizedException('Invalid token');
 
-        if (schema !== "Bearer" || !token) throw new UnauthorizedException("Invalid token");
-
-        try {
-            const payload = await this.tokenService.verifyAccess(token);
-            (request as AuthenticatedRequest).user = {
-                userId: payload.sub,
-                profile: payload.profile,
-                raw: payload
-            }
-            return true;
-        } catch (error) {
-            throw new UnauthorizedException("Invalid token");
-        }
-
+    try {
+      const payload = await this.tokenService.verifyAccess(token);
+      (request as AuthenticatedRequest).user = {
+        userId: payload.sub,
+        profile: payload.profile,
+        raw: payload,
+      };
+      return true;
+    } catch (error) {
+      throw new UnauthorizedException('Invalid token');
     }
+  }
 }

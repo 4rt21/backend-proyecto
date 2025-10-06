@@ -1,7 +1,11 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { ExceptionResponse } from 'src/common/interfaces/exception-responses/ExceptionResponse';
-import { BadRequestExample, ConflictResponse, UnauthorizedResponse } from 'src/common/interfaces/exception-responses/responses-examples';
+import {
+  BadRequestExample,
+  ConflictResponse,
+  UnauthorizedResponse,
+} from 'src/common/interfaces/exception-responses/responses-examples';
 import { User } from 'src/users/user.repository';
 
 export function ApiUserUpdate() {

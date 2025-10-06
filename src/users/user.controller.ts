@@ -8,7 +8,6 @@ import {
   Put,
   Req,
   UseGuards,
-
 } from '@nestjs/common';
 import { UserDto, UserService } from './users.service';
 import {
@@ -75,7 +74,6 @@ export class UserController {
     };
 
     const reportId = await this.reportsService.postReport(sendBody);
-
 
     const report_category = await this.reportsService.postReportCategory(
       reportId,

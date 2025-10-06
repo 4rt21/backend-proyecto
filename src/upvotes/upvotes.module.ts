@@ -3,10 +3,10 @@ import { Module } from '@nestjs/common';
 import { UpvotesService } from './upvotes.service';
 import { UpvotesController } from './upvotes.controller';
 import { UpvotesRepository } from './upvotes.repository';
-import { AuthModule } from 'src/auth/auth.module'; 
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [AuthModule],   
+  imports: [AuthModule],
   controllers: [UpvotesController],
   providers: [UpvotesService, UpvotesRepository],
 })

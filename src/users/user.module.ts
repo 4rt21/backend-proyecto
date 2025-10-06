@@ -11,7 +11,13 @@ import { ImagesService } from 'src/images/images.service';
 @Module({
   controllers: [UserController],
   imports: [ReportsModule, UserModule],
-  providers: [UserRepository, UserService, TokensService, ReportsCategoryRepository, ImagesService],
+  providers: [
+    UserRepository,
+    UserService,
+    TokensService,
+    ReportsCategoryRepository,
+    ImagesService,
+  ],
   exports: [UserRepository, UserService],
 })
 export class UserModule {}
