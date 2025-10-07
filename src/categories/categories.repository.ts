@@ -39,22 +39,31 @@ export class CategoriesRepository {
   }
 
   async updateCategory(body: UpdateCategoryDto): Promise<boolean> {
-    const sql = `UPDATE categories SET WHERE id = ?`;
-    const params: string[] = [];
+    let sql = `UPDATE categories SET `;
+    const updates: string[] = [];
+    const params: any[] = [];
 
     if (body.name) {
-      sql.concat(`SET name = ?`);
+      updates.push(`name = ?`);
       params.push(body.name);
     }
 
     if (body.description) {
-      sql.concat(`SET description = ?`);
+      updates.push(`description = ?`);
       params.push(body.description);
     }
 
+    if (updates.length === 0) {
+      throw new Error('No fields to update provided');
+    }
+
+    sql += updates.join(', ');
+    sql += ` WHERE id = ?`;
+    params.push(body.id);
+
     const [rows] = await this.dbService
       .getPool()
-      .query<ResultSetHeader>(sql, [...params, body.id]);
+      .query<ResultSetHeader>(sql, params);
 
     return rows.affectedRows > 0;
   }

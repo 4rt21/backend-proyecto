@@ -50,6 +50,11 @@ export class ReportsService {
       }
     });
 
+    if (reportDto.created_by === undefined || reportDto.created_by === null) {
+      reportDto.created_by = 1;
+    }
+
+    console.log(reportDto);
     const result: any = await this.reportsRepository.createReport(reportDto);
 
     if (typeof result !== 'object' && !('insertId' in result)) {
