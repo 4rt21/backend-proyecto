@@ -37,6 +37,20 @@ export const BadRequestExample = {
       ...BadRequest,
     },
   },
+  categoryIdRequired: {
+    summary: 'Category ID is required for update',
+    value: {
+      message: 'Category ID is required for update.',
+      ...BadRequest,
+    },
+  },
+  updateFailed: {
+    summary: 'Failed to update this field',
+    value: {
+      message: 'Failed to update this field.',
+      ...BadRequest,
+    },
+  },
 };
 
 export const NotFoundResponse = {
@@ -44,6 +58,14 @@ export const NotFoundResponse = {
     summary: 'No user with that id found',
     value: {
       message: 'User with id 442 not found',
+      error: 'Not Found',
+      statusCode: 404,
+    },
+  },
+  categoryNotFound: {
+    summary: 'No category with that id found',
+    value: {
+      message: 'Category with id 442 not found',
       error: 'Not Found',
       statusCode: 404,
     },

@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body } from '@nestjs/common';
+import { Controller, Post, Get, Body, Put, Delete } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import {
   ApiBadRequestResponse,
@@ -8,6 +8,14 @@ import {
 } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 import { BadRequestExample } from 'src/common/interfaces/exception-responses/responses-examples';
+import {
+  ApiUpdateCategory,
+  UpdateCategoryDto,
+} from './dtos/put-categories-dto';
+import {
+  ApiDeleteCategory,
+  DeleteCategoryDto,
+} from './dtos/delete-category-dto';
 
 export class CreateCategoryDto {
   @ApiProperty({
@@ -76,5 +84,17 @@ export class CategoriesController {
   })
   async getCategories() {
     return this.categoriesService.getCategories();
+  }
+
+  @Put()
+  @ApiUpdateCategory()
+  async updateCategory(@Body() body: UpdateCategoryDto) {
+    return this.categoriesService.updateCategory(body);
+  }
+
+  @Delete()
+  @ApiDeleteCategory()
+  async deleteCategory(@Body() body: DeleteCategoryDto) {
+    return this.categoriesService.deleteCategory(body.id);
   }
 }
