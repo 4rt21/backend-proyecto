@@ -81,6 +81,7 @@ export class AdminController {
   ): Promise<User> {
     return this.userService.partialUpdate(id, userDto);
   }
+
   @Get('user/list')
   @ApiOkResponse({
     description: 'List of all users',
@@ -106,18 +107,6 @@ export class AdminController {
     return this.userService.getAllUsers();
   }
 
-  @ApiParam({ name: 'id', type: 'string', description: 'El id del usuario' })
-  @ApiNotFoundResponse({
-    description: 'No user with that id found',
-    type: ExceptionResponse,
-    example: NotFoundResponse.userNotFound.value,
-  })
-  @ApiOkResponse({ description: 'User found', type: User })
-  @Get('user/:id')
-  async getUser(@Param('id') id: string) {
-    return this.userService.findById(id);
-  }
-
   @Get('user/count')
   @ApiOkResponse({
     description: 'Total number of users',
@@ -129,5 +118,17 @@ export class AdminController {
   })
   async getUserCount() {
     return this.userService.getUserCount();
+  }
+
+  @ApiParam({ name: 'id', type: 'string', description: 'El id del usuario' })
+  @ApiNotFoundResponse({
+    description: 'No user with that id found',
+    type: ExceptionResponse,
+    example: NotFoundResponse.userNotFound.value,
+  })
+  @ApiOkResponse({ description: 'User found', type: User })
+  @Get('user/:id')
+  async getUser(@Param('id') id: string) {
+    return this.userService.findById(id);
   }
 }
