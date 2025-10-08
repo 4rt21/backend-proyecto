@@ -21,11 +21,17 @@ export class ReportsService {
     private readonly imagesService: ImagesService,
   ) {}
 
-  async getReports(status_id?: string, id?: string, page?: number) {
+  async getReports(
+    status_id?: string,
+    id?: string,
+    page?: number,
+    created_by?: number,
+  ) {
     const reports = await this.reportsRepository.getAllReports(
       status_id,
       id,
       page,
+      created_by,
     );
 
     if (id && reports.length === 0) {
@@ -63,7 +69,6 @@ export class ReportsService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-
     return result.insertId;
   }
 
@@ -127,5 +132,14 @@ export class ReportsService {
     const categories =
       await this.reportsCategoryRepository.getCategoriesByReportId(report.id);
     return { report: updatedReport, categories };
+  }
+
+  async getUserReports(userId: number) {
+    return this.reportsRepository.getAllReports(
+      undefined,
+      undefined,
+      undefined,
+      userId,
+    );
   }
 }

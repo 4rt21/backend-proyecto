@@ -119,7 +119,10 @@ export class UserRepository {
     return rows;
   }
 
-  async updateUserSettings(id: string, settings: UpdateSettingsUserDto): Promise<any> {
+  async updateUserSettings(
+    id: string,
+    settings: UpdateSettingsUserDto,
+  ): Promise<any> {
     const keys = Object.keys(settings);
     const values = Object.values(settings);
 
@@ -179,11 +182,11 @@ export class UserRepository {
     return { status: (rows as any).affectedRows > 0 };
   }
 
-  async getUserCount(): Promise<number> {
+  async getUserCount(): Promise<Record<string, number>> {
     const sql = 'SELECT COUNT(*) AS count FROM users';
     const [rows] = await this.dbService.getPool().query(sql);
     const result = rows as { count: number }[];
-    return result[0].count;
+    return { count: result[0].count };
   }
 
   async getUserInfo(id: string) {

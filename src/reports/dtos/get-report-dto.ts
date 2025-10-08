@@ -48,6 +48,10 @@ export class GetReportDto {
   @IsInt({ message: 'Page must be a valid integer' })
   @Min(1, { message: 'Page must be a positive integer greater than 0' })
   page?: number;
+
+  @IsOptional()
+  @IsNumber({}, { message: 'created_by must be a valid number' })
+  created_by?: number;
 }
 
 export class GetReportCountDto {

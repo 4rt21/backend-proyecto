@@ -110,6 +110,13 @@ export class UserController {
     return await this.reportsService.updateReport(id, body);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('reports')
+  async getUserReports(@Req() req: AuthenticatedRequest) {
+    const id = req.user.profile.id;
+    return await this.reportsService.getUserReports(Number(id));
+  }
+
   @ApiUnauthorizedResponse({
     description: 'Unauthorized user',
     type: ExceptionResponse,

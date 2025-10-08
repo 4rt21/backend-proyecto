@@ -68,7 +68,12 @@ export class ReportsRepository {
     private readonly reportsCategoryRepository: ReportsCategoryRepository,
   ) {}
 
-  async getAllReports(status?: string, id?: string, page?: number) {
+  async getAllReports(
+    status?: string,
+    id?: string,
+    page?: number,
+    created_by?: number,
+  ) {
     const sql = `SELECT r.id,
          r.title,
          r.image,
@@ -86,6 +91,7 @@ export class ReportsRepository {
         ${status ? ` AND status_id = '${status}'` : ''}
         ${id ? ` AND id = '${id}'` : ''}
         ${page ? ` LIMIT ${(Number(page) - 1) * 10}, 10` : ''}
+        ${created_by ? ` AND r.created_by = '${created_by}'` : ''}
         ORDER BY r.created_at ASC
         `;
 
