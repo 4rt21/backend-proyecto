@@ -11,6 +11,7 @@ import { parseArgs } from 'util';
 import { CreateUserOptionalDto } from 'src/admin/admin.controller';
 import { CreateUserDto } from './user.controller';
 import { ImagesService } from 'src/images/images.service';
+import { UpdateSettingsUserDto } from './dtos/update-settings-dto';
 
 export type UserDto = {
   email: string;
@@ -160,5 +161,24 @@ export class UserService {
     this.imagesService.deleteFile(user.image_path!);
 
     return await this.userRepository.deleteUserById(userId);
+  }
+
+  async getUserCount() {
+    return this.userRepository.getUserCount();
+  }
+
+  async getUserInfo(id: string) {
+    return this.userRepository.getUserInfo(id);
+  }
+
+  async updateUserSettings(id: string, settings: UpdateSettingsUserDto) {
+
+    const user = await this.userRepository.findById(id);
+    
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    return this.userRepository.updateUserSettings(id, settings);
   }
 }

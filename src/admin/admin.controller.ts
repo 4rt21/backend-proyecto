@@ -117,4 +117,17 @@ export class AdminController {
   async getUser(@Param('id') id: string) {
     return this.userService.findById(id);
   }
+
+  @Get('user/count')
+  @ApiOkResponse({
+    description: 'Total number of users',
+    schema: {
+      example: {
+        count: 42,
+      },
+    },
+  })
+  async getUserCount() {
+    return this.userService.getUserCount();
+  }
 }

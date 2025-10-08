@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserOptionalDto } from 'src/admin/admin.controller';
 import { DbService } from 'src/db/db.service';
 import { ApiProperty } from '@nestjs/swagger';
+import { UpdateSettingsUserDto } from './dtos/update-settings-dto';
 
 export class User {
   @ApiProperty({ example: '1' })
@@ -118,7 +119,7 @@ export class UserRepository {
     return rows;
   }
 
-  async updateUserSettings(id: string, settings: any): Promise<any> {
+  async updateUserSettings(id: string, settings: UpdateSettingsUserDto): Promise<any> {
     const keys = Object.keys(settings);
     const values = Object.values(settings);
 
@@ -176,5 +177,20 @@ export class UserRepository {
     const sql = 'DELETE FROM users WHERE id = ?';
     const [rows] = await this.dbService.getPool().query(sql, [userId]);
     return { status: (rows as any).affectedRows > 0 };
+  }
+
+  async getUserCount(): Promise<number> {
+    const sql = 'SELECT COUNT(*) AS count FROM users';
+    const [rows] = await this.dbService.getPool().query(sql);
+    const result = rows as { count: number }[];
+    return result[0].count;
+  }
+
+  async getUserInfo(id: string) {
+    const sql =
+      'SELECT us.is_reactions_enabled, us.is_review_enabled, us.is_reports_enabled FROM users u JOIN user_settings us ON u.id = us.user_id WHERE u.id = ? LIMIT 1';
+    const [rows] = await this.dbService.getPool().query(sql, [id]);
+
+    return rows[0];
   }
 }

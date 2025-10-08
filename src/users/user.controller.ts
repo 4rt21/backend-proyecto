@@ -32,6 +32,11 @@ import {
 } from 'src/DTOS/user-controller/create-user-dto';
 import { ApiUserUpdate } from 'src/DTOS/user-controller/update-user-dto';
 import { UpdateReportDTO } from 'src/reports/dtos/update-report-dto';
+import {
+  ApiUpdateSettings,
+  UpdateSettingsUserDto,
+} from './dtos/update-settings-dto';
+import { ApiGetSettings } from './dtos/get-settings-dto';
 
 @Controller('users')
 export class UserController {
@@ -161,5 +166,25 @@ export class UserController {
   async deleteUser(@Req() req: AuthenticatedRequest) {
     return this.userService.deleteUser(req.user.profile.id);
   }
+
+  @Get('settings-info')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiGetSettings()
+  async getUserSettings(@Req() req: AuthenticatedRequest) {
+    return this.userService.getUserInfo(req.user.profile.id);
+  }
+
+  @Put('settings-info')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiUpdateSettings()
+  async updateSettingsInfo(
+    @Req() req: AuthenticatedRequest,
+    @Body() body: UpdateSettingsUserDto,
+  ) {
+    return this.userService.updateUserSettings(req.user.profile.id, body);
+  }
 }
+
 export { CreateUserDto };
