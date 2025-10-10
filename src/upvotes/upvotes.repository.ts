@@ -28,7 +28,7 @@ export class UpvotesRepository {
     const query = 'SELECT COUNT(*) as count FROM upvotes WHERE report_id = ?';
     const [rows] = await this.dbService.getPool().query(query, [postId]);
     const result = rows as { count: number }[];
-    return result[0]?.count || -1;
+    return result[0]?.count || 0;
   }
 
   async userHasUpvoted(userId: string, postId: string): Promise<boolean> {

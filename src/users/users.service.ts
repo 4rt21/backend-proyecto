@@ -140,6 +140,9 @@ export class UserService {
     if (dtoUserOptional.name !== undefined) updates.name = dtoUserOptional.name;
     if (dtoUserOptional.username !== undefined)
       updates.username = dtoUserOptional.username;
+    if (dtoUserOptional.image_path !== undefined) {
+      updates.image_path = dtoUserOptional.image_path;
+    }
 
     if (updates.email) {
       const existingUser = await this.userRepository.findByEmail(updates.email);
