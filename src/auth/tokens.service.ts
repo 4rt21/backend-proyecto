@@ -5,6 +5,7 @@ export type UserProfile = {
   id: string;
   email: string;
   name: string;
+  role_id: 1 | 2 
 };
 
 export type AccessPayload = {

@@ -17,6 +17,8 @@ export class User {
   salt: string;
   @ApiProperty({ example: '/path/to/image.jpg', required: false })
   image_path?: string;
+  @ApiProperty({ examples: [1, 2] })
+  role_id: number;
 }
 
 @Injectable()
@@ -37,16 +39,16 @@ export class UserRepository {
       .getPool()
       .query(sql, [email, name, password, username, salt, role_id]);
 
-    const user = await this.findByEmail(email);
+    const user: any = await this.findByEmail(email);
     return user;
   }
 
-  async findByEmail(email: string): Promise<User> {
+  async findByEmail(email: string): Promise<User | null> {
     const sql = 'SELECT * FROM users WHERE email = ? LIMIT 1';
     const [rows] = await this.dbService.getPool().query(sql, [email]);
 
     const result = rows as User[];
-    return result[0];
+    return result[0] || null;
   }
 
   async findById(id: string): Promise<User> {

@@ -83,17 +83,26 @@ export class ReportsRepository {
          r.created_by,
          r.status_id,
          r.report_url, 
-         u.name as user_name,
-         u.image_path as user_image
+         r.is_anonymous,
+        CASE 
+          WHEN r.is_anonymous = 1 THEN 'Anonimo'
+          ELSE u.username
+        END as user_name,
+        CASE 
+          WHEN r.is_anonymous = 1 THEN 'profile-pictures/default.jpg'
+          ELSE u.image_path
+        END as user_image
         FROM reports r
-        JOIN users u ON r.created_by = u.id
+        JOIN users u 
+          ON r.created_by = u.id
         WHERE 1=1
         ${status ? ` AND status_id = '${status}'` : ''}
         ${id ? ` AND id = '${id}'` : ''}
-        ${page ? ` LIMIT ${(Number(page) - 1) * 10}, 10` : ''}
         ${created_by ? ` AND r.created_by = '${created_by}'` : ''}
         ORDER BY r.created_at ASC
+        ${page ? ` LIMIT ${(Number(page) - 1) * 10}, 10` : ''}
         `;
+    console.log(sql);
 
     const [rows] = await this.dbService.getPool().query<RowDataPacket[]>(sql);
     return Promise.all(
@@ -109,6 +118,7 @@ export class ReportsRepository {
         user_image: row.user_image,
         status_id: row.status_id,
         report_url: row.report_url,
+        is_anonymous: row.is_anonymous,
         categories:
           await this.reportsCategoryRepository.getCategoriesByReportId(row.id),
       })),

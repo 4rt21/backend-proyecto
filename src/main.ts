@@ -35,16 +35,8 @@ async function bootstrap() {
     .addTag('Proyecto')
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-
-  const OpenApiSpecification = app.use(
-    '/docs',
-    apiReference({
-      content: document,
-    }),
-  );
-
-  SwaggerModule.setup('api', app, document);
+  const doc = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, doc);
 
   app.useGlobalPipes(
     new ValidationPipe({

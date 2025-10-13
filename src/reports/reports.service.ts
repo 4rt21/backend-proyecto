@@ -60,7 +60,7 @@ export class ReportsService {
       reportDto.created_by = 1;
     }
 
-    console.log(reportDto);
+
     const result: any = await this.reportsRepository.createReport(reportDto);
 
     if (typeof result !== 'object' && !('insertId' in result)) {

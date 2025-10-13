@@ -17,6 +17,9 @@ import { UpvotesModule } from './upvotes/upvotes.module';
 import { ImagesService } from './images/images.service';
 import { ImagesModule } from './images/images.module';
 import { StatusModule } from './status/status.module';
+import { DashboardService } from './dashboard/dashboard.service';
+import { DashboardController } from './dashboard/dashboard.controller';
+import { DashboardModule } from './dashboard/dashboard.module';
 @Module({
   imports: [
     JwtModule.register({
@@ -35,8 +38,9 @@ import { StatusModule } from './status/status.module';
     UpvotesModule,
     ImagesModule,
     StatusModule,
+    DashboardModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, ImagesService],
+  controllers: [AppController, DashboardController],
+  providers: [AppService, ImagesService, DashboardService],
 })
 export class AppModule {}

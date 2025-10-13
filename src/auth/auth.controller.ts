@@ -1,8 +1,36 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { TokensService } from './tokens.service';
 import { UserService } from 'src/users/users.service';
 import { JwtAuthGuard } from 'src/common/guards/jwt.auth.guard';
 import type { AuthenticatedRequest } from 'src/common/interfaces/authenticated-request';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
+const allowedRoles = {
+  web: [2],
+  mobile: [1],
+};
+
+export class LoginDto {
+  @IsEmail()
+  @ApiProperty({ example: 'user@example.com' })
+  email: string;
+
+  @ApiProperty({ example: 'password' })
+  @IsString()
+  password: string;
+
+  @ApiProperty({ example: 'web' })
+  @IsEnum(['web', 'mobile'], { message: 'Type must be either web or mobile' })
+  type: 'web' | 'mobile';
+}
 
 @Controller('auth')
 export class AuthController {
@@ -12,16 +40,25 @@ export class AuthController {
   ) {}
 
   @Post('login')
-  async login(@Body() dto: { email: string; password: string }) {
+  async login(
+    @Body()
+    dto: LoginDto,
+  ) {
     const user = await this.userService.login(dto.email, dto.password);
 
     if (!user) {
       throw new Error('Invalid credentials');
     }
+
+    if (!allowedRoles[dto.type].includes(user.role_id)) {
+      throw new UnauthorizedException('aqui no puedes entrar tontito');
+    }
+
     const userProfile = {
       id: user.id.toString(),
       email: user.email,
       name: user.name,
+      role_id: user.role_id as 1 | 2,
     };
 
     const accessToken =
@@ -51,13 +88,30 @@ export class AuthController {
         id: user.id.toString(),
         email: user.email,
         name: user.name,
+        role_id: user.role_id as 1 | 2,
       });
       const newRefreshToken = await this.tokenService.generateRefreshToken(
         user.id.toString(),
       );
-      return { accessToken: newAccessToken };
+      return { accessToken: newAccessToken, refreshToken: newRefreshToken };
     } catch (error) {
       throw new Error('Invalid refresh token');
     }
+  }
+
+  @Post('verify')
+  @UseGuards(JwtAuthGuard)
+  async verify(@Req() req: AuthenticatedRequest) {
+    if (!req.user) {
+      throw new UnauthorizedException('User not authenticated');
+    }
+    if (!req.user.profile) { 
+      throw new UnauthorizedException('User profile not found');
+    }
+    if (!req.user.profile.role_id) {
+      throw new UnauthorizedException('User role not assigned');
+    }
+
+    return { message: 'Token is valid' };
   }
 }

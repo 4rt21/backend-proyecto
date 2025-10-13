@@ -54,4 +54,8 @@ export class PostReportDto {
   @IsUrl()
   @ApiProperty({ example: 'http://example.com/report/123' })
   report_url: string;
+
+  @IsEnum([0, 1])
+  @ApiProperty({ enum: [0, 1], examples: [0, 1] })
+  is_anonymous: 0 | 1;
 }
