@@ -1,6 +1,6 @@
-import { applyDecorators } from "@nestjs/common";
-import { ApiOkResponse } from "@nestjs/swagger";
-import { UpdateSettingsUserDto } from "./update-settings-dto";
+import { applyDecorators } from '@nestjs/common';
+import { ApiOkResponse } from '@nestjs/swagger';
+import { UpdateSettingsUserDto } from './update-settings-dto';
 
 export function ApiGetSettings() {
   return applyDecorators(
@@ -11,6 +11,7 @@ export function ApiGetSettings() {
         is_reactions_enabled: 1,
         is_review_enabled: 1,
         is_reports_enabled: 1,
+        is_anonymous_reports_enabled: 0,
       },
     }),
   );

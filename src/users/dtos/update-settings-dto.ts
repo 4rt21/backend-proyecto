@@ -27,6 +27,13 @@ export class UpdateSettingsUserDto {
     examples: [0, 1],
   })
   is_reports_enabled?: number;
+
+  @IsOptional()
+  @ApiPropertyOptional({
+    description: 'Enable or disable anonymous feature',
+    examples: [0, 1],
+  })
+  is_anonymous_preferred: number;
 }
 
 

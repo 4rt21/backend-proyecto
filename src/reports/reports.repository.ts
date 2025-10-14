@@ -97,7 +97,7 @@ export class ReportsRepository {
           ON r.created_by = u.id
         WHERE 1=1
         ${status ? ` AND status_id = '${status}'` : ''}
-        ${id ? ` AND id = '${id}'` : ''}
+        ${id ? ` AND r.id = '${id}'` : ''}
         ${created_by ? ` AND r.created_by = '${created_by}'` : ''}
         ORDER BY r.created_at ASC
         ${page ? ` LIMIT ${(Number(page) - 1) * 10}, 10` : ''}
@@ -180,7 +180,7 @@ export class ReportsRepository {
     const ALLOWED_COLUMNS = [
       'title',
       'description',
-      'status',
+      'status_id',
       'updated_at',
       'image',
       'report_url',

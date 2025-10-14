@@ -70,6 +70,8 @@ export class ReportsController {
         'At least one field must be provided for update',
       );
     }
+
+
     return await this.reportsService.updateReport(id, body);
   }
 

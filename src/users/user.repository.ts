@@ -121,25 +121,31 @@ export class UserRepository {
     return rows;
   }
 
-  async updateUserSettings(
-    id: string,
-    settings: UpdateSettingsUserDto,
-  ): Promise<any> {
-    const keys = Object.keys(settings);
-    const values = Object.values(settings);
+async updateUserSettings(
+  id: string,
+  settings: UpdateSettingsUserDto,
+): Promise<any> {
+  const entries = Object.entries(settings).filter(
+    ([_, value]) => value !== undefined && value !== null
+  );
 
-    const setClause = keys.map((key) => `${key} = ?`).join(', ');
-
-    const query = `
-            UPDATE user_settings
-            SET ${setClause}
-            WHERE user_id = ?
-        `;
-
-    await this.dbService.getPool().query(query, [...values, id]);
-
+  if (entries.length === 0) {
     return this.getUserSettings(id);
   }
+
+  const keys = entries.map(([key]) => key);
+  const values = entries.map(([_, value]) => value);
+  const setClause = keys.map((key) => `${key} = ?`).join(', ');
+  
+  const query = `
+    UPDATE user_settings
+    SET ${setClause}
+    WHERE user_id = ?
+  `;
+  
+  await this.dbService.getPool().query(query, [...values, id]);
+  return this.getUserSettings(id);
+}
 
   async getPostsInfoByUserId(userId: string): Promise<any> {
     const sql = `
@@ -193,7 +199,7 @@ export class UserRepository {
 
   async getUserInfo(id: string) {
     const sql =
-      'SELECT us.is_reactions_enabled, us.is_review_enabled, us.is_reports_enabled FROM users u JOIN user_settings us ON u.id = us.user_id WHERE u.id = ? LIMIT 1';
+      'SELECT us.is_reactions_enabled, us.is_review_enabled, us.is_reports_enabled, us.is_anonymous_preferred FROM users u JOIN user_settings us ON u.id = us.user_id WHERE u.id = ? LIMIT 1';
     const [rows] = await this.dbService.getPool().query(sql, [id]);
 
     return rows[0];

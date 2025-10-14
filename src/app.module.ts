@@ -20,6 +20,7 @@ import { StatusModule } from './status/status.module';
 import { DashboardService } from './dashboard/dashboard.service';
 import { DashboardController } from './dashboard/dashboard.controller';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { ConfigurationsModule } from './configurations/configurations.module';
 @Module({
   imports: [
     JwtModule.register({
@@ -39,6 +40,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     ImagesModule,
     StatusModule,
     DashboardModule,
+    ConfigurationsModule,
   ],
   controllers: [AppController, DashboardController],
   providers: [AppService, ImagesService, DashboardService],
