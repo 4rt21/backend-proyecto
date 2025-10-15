@@ -41,6 +41,7 @@ import { ConfigurationsModule } from './configurations/configurations.module';
     StatusModule,
     DashboardModule,
     ConfigurationsModule,
+    NotificationsModule,
   ],
   controllers: [AppController, DashboardController],
   providers: [AppService, ImagesService, DashboardService],
