@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
@@ -17,8 +16,7 @@ import {
   ApiParam,
   ApiProperty,
 } from '@nestjs/swagger';
-import { IsEmail, IsOptional, MinLength } from 'class-validator';
-import { MIN_PASSWORD_LENGTH } from 'src/common/constants';
+import { IsEmail, IsOptional } from 'class-validator';
 import { ExceptionResponse } from 'src/common/interfaces/exception-responses/ExceptionResponse';
 import {
   BadRequestExample,

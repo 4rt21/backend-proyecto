@@ -1,6 +1,5 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
-import { title } from 'process';
 import { JwtAuthGuard } from 'src/common/guards/jwt.auth.guard';
 import type { AuthenticatedRequest } from 'src/common/interfaces/authenticated-request';
 import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';

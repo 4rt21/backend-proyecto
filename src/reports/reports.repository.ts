@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { DbService } from 'src/db/db.service';
 import { PostReportDto } from './dtos/post-report-dto';
-import { DbResponse } from 'src/common/interfaces/db-response';
 import { QueryError, QueryResult, RowDataPacket } from 'mysql2';
 import { IsDateString, IsInt, IsNumberString, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { GetReportCountDto, GetReportDto } from './dtos/get-report-dto';
+import { GetReportCountDto } from './dtos/get-report-dto';
 import { ReportsCategoryRepository } from 'src/reports_category/reports-category-repository';
 export class ReportDto {
   @ApiProperty({ example: 1, description: 'Unique identifier of the report' })

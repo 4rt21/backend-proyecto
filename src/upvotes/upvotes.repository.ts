@@ -38,7 +38,7 @@ export class UpvotesRepository {
       const [rows] = await this.dbService
         .getPool()
         .query(query, [userId, postId]);
-      return (rows as any[]).length > 0 ? true : false;
+      return (rows as any[]).length > 0;
     } catch (error) {
       throw new Error(`Failed to check upvote status: ${error.message}`);
     }

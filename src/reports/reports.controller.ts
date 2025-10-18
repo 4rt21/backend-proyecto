@@ -13,15 +13,12 @@ import { ReportsService } from './reports.service';
 import {
   ApiReportGet,
   GetReportDto,
-  ReportStatus,
 } from './dtos/get-report-dto';
 import { PostReportDto } from './dtos/post-report-dto';
 import {
-  ApiBadRequestResponse,
   ApiBody,
   ApiNotFoundResponse,
   ApiOkResponse,
-  ApiQuery,
 } from '@nestjs/swagger';
 import { NotFoundResponse } from 'src/common/interfaces/exception-responses/responses-examples';
 import { ApiQueryStatusDto } from 'src/docs/api-querys';

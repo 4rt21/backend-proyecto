@@ -57,9 +57,8 @@ export class DashboardService {
             FROM reports r
             JOIN upvotes u ON r.id = u.report_id 
             WHERE r.created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
-            ORDER BY upvotes DESC
             GROUP BY r.id;
-¿
+            ORDER BY upvotes DESC
         `);
     return {
       stats: data[0],

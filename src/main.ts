@@ -7,9 +7,8 @@ import {
 } from '@nestjs/platform-express';
 import express from 'express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { apiReference } from '@scalar/nestjs-api-reference';
 import { ValidationPipe } from '@nestjs/common';
-import path from 'path';
+import path from 'node:path';
 
 async function bootstrap() {
   const expressApp = express();

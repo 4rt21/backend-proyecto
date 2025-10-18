@@ -9,4 +9,4 @@ import { ImagesService } from 'src/images/images.service';
   controllers: [AdminController],
   providers: [UserService, TokensService, UserRepository, ImagesService],
 })
-export class adminModule {}
+export class AdminModule {}

@@ -126,10 +126,14 @@ export class UserService {
     id: string,
     dtoUserOptional: CreateUserOptionalDto,
   ): Promise<User> {
-    if (isNaN(Number(id))) {
+    if (Number.isNaN(Number(id))) {
       throw new BadRequestException('Id must be a number');
     }
     const userToUpdate = await this.userRepository.findById(id);
+
+    if (!userToUpdate) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
 
     const updates: Partial<CreateUserOptionalDto> = {};
 

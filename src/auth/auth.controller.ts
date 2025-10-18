@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  NotFoundException,
   Post,
   Req,
   UnauthorizedException,
@@ -12,7 +13,7 @@ import { UserService } from 'src/users/users.service';
 import { JwtAuthGuard } from 'src/common/guards/jwt.auth.guard';
 import type { AuthenticatedRequest } from 'src/common/interfaces/authenticated-request';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsString } from 'class-validator';
 const allowedRoles = {
   web: [2],
   mobile: [1],
@@ -83,7 +84,7 @@ export class AuthController {
         dto.refreshToken,
       );
       const user = await this.userService.findById(profile.sub);
-      if (!user) throw Error('Usuario no encontrado');
+      if (!user) throw new NotFoundException('Usuario no encontrado');
       const newAccessToken = await this.tokenService.generateAccessToken({
         id: user.id.toString(),
         email: user.email,
@@ -95,7 +96,7 @@ export class AuthController {
       );
       return { accessToken: newAccessToken, refreshToken: newRefreshToken };
     } catch (error) {
-      throw new Error('Invalid refresh token');
+      throw new UnauthorizedException(`Invalid refresh token: ${error}`);
     }
   }
 

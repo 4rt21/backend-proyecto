@@ -7,7 +7,7 @@ import { DbModule } from './db/db.module';
 import { UserModule } from './users/user.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
-import { adminModule } from './admin/admin.module';
+import { AdminModule } from './admin/admin.module';
 import { ReportsModule } from './reports/reports.module';
 import { ReportsCategoryModule } from './reports_category/reports-category.module';
 import { CategoriesModule } from './categories/categories.module';
@@ -30,7 +30,7 @@ import { ConfigurationsModule } from './configurations/configurations.module';
     DbModule,
     UserModule,
     AuthModule,
-    adminModule,
+    AdminModule,
     ReportsModule,
     ReportsCategoryModule,
     CategoriesModule,

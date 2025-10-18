@@ -9,12 +9,10 @@ import {
   FileTypeValidator,
   Param,
   Put,
-  BadRequestException,
   Body,
 } from '@nestjs/common';
 import { ImagesService } from './images.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
 
 @Controller('images')
 export class ImagesController {

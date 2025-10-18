@@ -4,7 +4,7 @@ import {
   ApiOkResponse,
   ApiProperty,
 } from '@nestjs/swagger';
-import { IsNotEmpty, isNotEmpty } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 import {
   BadRequestExample,
   NotFoundResponse,

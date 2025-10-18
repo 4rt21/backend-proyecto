@@ -104,9 +104,7 @@ export class UserRepository {
 
   async updatePassword(id: string, newPassword: string): Promise<string> {
     const sql = 'UPDATE users SET password = ? WHERE id = ?';
-    const [result] = await this.dbService
-      .getPool()
-      .query(sql, [newPassword, id]);
+    await this.dbService.getPool().query(sql, [newPassword, id]);
     return newPassword;
   }
 
@@ -121,31 +119,31 @@ export class UserRepository {
     return rows;
   }
 
-async updateUserSettings(
-  id: string,
-  settings: UpdateSettingsUserDto,
-): Promise<any> {
-  const entries = Object.entries(settings).filter(
-    ([_, value]) => value !== undefined && value !== null
-  );
+  async updateUserSettings(
+    id: string,
+    settings: UpdateSettingsUserDto,
+  ): Promise<any> {
+    const entries = Object.entries(settings).filter(
+      ([_, value]) => value !== undefined && value !== null,
+    );
 
-  if (entries.length === 0) {
-    return this.getUserSettings(id);
-  }
+    if (entries.length === 0) {
+      return this.getUserSettings(id);
+    }
 
-  const keys = entries.map(([key]) => key);
-  const values = entries.map(([_, value]) => value);
-  const setClause = keys.map((key) => `${key} = ?`).join(', ');
-  
-  const query = `
+    const keys = entries.map(([key]) => key);
+    const values = entries.map(([_, value]) => value);
+    const setClause = keys.map((key) => `${key} = ?`).join(', ');
+
+    const query = `
     UPDATE user_settings
     SET ${setClause}
     WHERE user_id = ?
   `;
-  
-  await this.dbService.getPool().query(query, [...values, id]);
-  return this.getUserSettings(id);
-}
+
+    await this.dbService.getPool().query(query, [...values, id]);
+    return this.getUserSettings(id);
+  }
 
   async getPostsInfoByUserId(userId: string): Promise<any> {
     const sql = `

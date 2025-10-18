@@ -1,22 +1,18 @@
 import {
   IsOptional,
   IsInt,
-  IsString,
   IsEnum,
   IsNumber,
   IsNumberString,
-  isInt,
   Min,
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { applyDecorators } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiQuery,
-  ApiResponse,
 } from '@nestjs/swagger';
 import { NotFoundResponse } from 'src/common/interfaces/exception-responses/responses-examples';
 

@@ -3,16 +3,12 @@ import {
   IsString,
   IsNotEmpty,
   IsNumber,
-  IsNumberString,
-  isEnum,
   IsEnum,
-  isNumberString,
   IsArray,
   IsOptional,
   IsUrl,
 } from 'class-validator';
-import { ReportStatus } from './get-report-dto';
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 
 export class PostReportDto {
   @IsString()
