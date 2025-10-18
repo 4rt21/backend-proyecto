@@ -1,9 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
 import { MIN_PASSWORD_LENGTH } from 'src/common/constants';
 import { applyDecorators } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
-import { ExceptionResponse } from 'src/common/interfaces/exception-responses/ExceptionResponse';
+import { ApiBearerAuth, ApiResponse, ApiProperty } from '@nestjs/swagger';
 export class UserSettingsDto {
   @ApiProperty({ example: 7 })
   id: number;

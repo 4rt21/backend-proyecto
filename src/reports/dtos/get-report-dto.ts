@@ -122,7 +122,7 @@ export function ApiReportGet() {
           user_name: 'Skibidi Toilet',
           created_by: 1,
           user_image: 'profile-pictures/default.jpg',
-          report_url: 'http://banco-seguro-falso.com',
+          report_url: 'https://banco-seguro-falso.com',
           categories: [1, 5],
         },
         {
@@ -137,7 +137,7 @@ export function ApiReportGet() {
           user_name: 'Dr. Sahur',
           created_by: 2,
           user_image: 'profile-pictures/default.jpg',
-          report_url: 'http://envios-gratis-seguro.net',
+          report_url: 'https://envios-gratis-seguro.net',
           categories: [2, 5],
         },
         {
@@ -152,7 +152,7 @@ export function ApiReportGet() {
           user_name: 'Dr. Sahur',
           created_by: 3,
           user_image: 'profile-pictures/default.jpg',
-          report_url: 'http://ofertas-electronica-barata.org',
+          report_url: 'https://ofertas-electronica-barata.org',
           categories: [3, 5],
         },
         {
@@ -167,7 +167,7 @@ export function ApiReportGet() {
           user_name: 'Dr. Sahur',
           created_by: 2,
           user_image: 'profile-pictures/default.jpg',
-          report_url: 'http://crypto-ganancias-rapidas.info',
+          report_url: 'https://crypto-ganancias-rapidas.info',
           categories: [4, 5],
         },
         {
@@ -182,7 +182,7 @@ export function ApiReportGet() {
           user_name: 'Skibidi Toilet',
           created_by: 1,
           user_image: 'profile-pictures/default.jpg',
-          report_url: 'http://soporte-oficial-falso.com',
+          report_url: 'https://soporte-oficial-falso.com',
           categories: [1, 4],
         },
       ],

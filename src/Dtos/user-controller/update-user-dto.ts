@@ -1,6 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
-import { ExceptionResponse } from 'src/common/interfaces/exception-responses/ExceptionResponse';
 import {
   BadRequestExample,
   ConflictResponse,

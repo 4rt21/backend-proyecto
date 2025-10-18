@@ -6,10 +6,8 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { UserRepository, User } from './user.repository';
-import { sha256 } from 'src/util/crypto/hash.util';
-import { parseArgs } from 'util';
+import { secureRandomInt, sha256 } from 'src/util/crypto/hash.util';
 import { CreateUserOptionalDto } from 'src/admin/admin.controller';
-import { CreateUserDto } from './user.controller';
 import { ImagesService } from 'src/images/images.service';
 import { UpdateSettingsUserDto } from './dtos/update-settings-dto';
 
@@ -27,8 +25,8 @@ export type partialDto = {
 const adjectives = ['cool', 'fast', 'smart', 'bright', 'happy'];
 
 function generateCreativeUsername(name: string) {
-  const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
-  const randomNum = Math.floor(Math.random() * 1000);
+  const adj = adjectives[secureRandomInt(adjectives.length)];
+  const randomNum = secureRandomInt(1000);
   return `${adj}_${name.toLowerCase().replace(/\s+/g, '')}${randomNum}`;
 }
 
