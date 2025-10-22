@@ -1,27 +1,35 @@
-## Documentación
+# FalconAlert backend.
 
-![Vista global](/src/util/imgs/1.png)
+<!-- BANNER: Add your project banner image or ASCII art here -->
+![banner-placeholder](./public/banner.jpeg)
 
-## Usuario
+A NestJS-based backend for reporting and moderation (users, reports, upvotes, notifications, images, admin). Includes REST endpoints, JWT auth, file uploads and a Swagger UI.
 
-### Modicar usuario
+## Quick overview
 
-![put user](/src/util/imgs/5.png)
+- Framework: NestJS
+- Language: TypeScript
+- DB: MySQL (via mysql2)
+- API docs: Swagger at /docs (configured in [`src/main.ts`](src/main.ts))
 
-### Administrador
+## Features
 
-#### Modificar usuario
+- User registration, login and profile management
+- Report creation, update, delete, categories and status tracking
+- Upvotes (protect reports)
+- Image upload & storage in /public
+- Notifications & configurations
+- JWT-based auth with access + refresh tokens
+- WebSocket gateway for report notifications
 
-![put user](/src/util/imgs/2.png)
+## Installation
 
-#### Obtener un usuario
+1. Clone the repository
+```sh
+git clone https://github.com/4rt21/backend-proyecto.git
+```
+2. Install dependencies
 
-![get user/id](/src/util/imgs/3.png)
-
-#### Obtener todos los usuarios
-
-![Vista user/list](/src/util/imgs/4.png)
-
-## Data Transfer Objects (DTOs)
-
-![Vista user/list](/src/util/imgs/dtos.png)
+```sh
+npm install
+```
