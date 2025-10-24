@@ -2,6 +2,7 @@ import { applyDecorators } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiProperty,
 } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
@@ -21,8 +22,9 @@ export class DeleteCategoryDto {
 
 export function ApiDeleteCategory() {
   return applyDecorators(
+    ApiOperation({ summary: 'Eliminar una categoría existente' }),
     ApiBadRequestResponse({
-      description: 'Error with the request',
+      description: 'Bad Request',
       examples: {
         categoryIdRequired: BadRequestExample.categoryIdRequired,
         categoryNotFound: NotFoundResponse.categoryNotFound,

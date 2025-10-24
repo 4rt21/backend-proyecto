@@ -58,7 +58,8 @@ export class DashboardService {
             JOIN upvotes u ON r.id = u.report_id
             WHERE r.created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
             GROUP BY r.id, r.title
-            ORDER BY upvotes DESC;
+            ORDER BY upvotes DESC
+            LIMIT 5;
             `);
 
     return {

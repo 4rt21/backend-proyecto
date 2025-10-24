@@ -1,0 +1,2604 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/dashboard": {
+      "get": {
+        "operationId": "DashboardController_getStats",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of dashboard stats",
+            "content": {
+              "application/json": {
+                "example": {
+                  "stats": {
+                    "total_reports": 30,
+                    "pending_reports": 18,
+                    "approved_reports": 8,
+                    "rejected_reports": 4,
+                    "protected_people": 11,
+                    "total_users": 12
+                  },
+                  "topCategoriesReports": [
+                    {
+                      "name": "Muebles",
+                      "total_reportes": 8
+                    },
+                    {
+                      "name": "Ropa",
+                      "total_reportes": 4
+                    },
+                    {
+                      "name": "Electrónica",
+                      "total_reportes": 10
+                    },
+                    {
+                      "name": "Libros",
+                      "total_reportes": 5
+                    },
+                    {
+                      "name": "Juguetes",
+                      "total_reportes": 4
+                    },
+                    {
+                      "name": "Deportes",
+                      "total_reportes": 4
+                    }
+                  ],
+                  "reportsPerMonth": [
+                    {
+                      "month": "2025-09",
+                      "total_reports": 5
+                    },
+                    {
+                      "month": "2025-10",
+                      "total_reports": 25
+                    }
+                  ],
+                  "topUsers": [
+                    {
+                      "name": "Arturo Utrillaa",
+                      "total_reports": 3
+                    },
+                    {
+                      "name": "Ana Keila Martínez Moreno",
+                      "total_reports": 3
+                    },
+                    {
+                      "name": "Dr. Sahur",
+                      "total_reports": 1
+                    },
+                    {
+                      "name": "Dr. Sahur",
+                      "total_reports": 1
+                    }
+                  ],
+                  "recentAlerts": [
+                    {
+                      "id": 45,
+                      "title": "televisor Smart a precio muy bajo"
+                    },
+                    {
+                      "id": 44,
+                      "title": "ropa de marca original a súper descuento"
+                    },
+                    {
+                      "id": 43,
+                      "title": "Prueba"
+                    },
+                    {
+                      "id": 9,
+                      "title": "Portal falso de soporte técnico"
+                    },
+                    {
+                      "id": 8,
+                      "title": "Portal falso de soporte técnico"
+                    }
+                  ],
+                  "topReportsMonth": [
+                    {
+                      "id": 2,
+                      "title": "Página de phishing detectada",
+                      "upvotes": 2
+                    },
+                    {
+                      "id": 7,
+                      "title": "Portal falso de soporte técnico",
+                      "upvotes": 2
+                    },
+                    {
+                      "id": 1,
+                      "title": "Tienda de componentes de computadoras DDCompus",
+                      "upvotes": 1
+                    },
+                    {
+                      "id": 3,
+                      "title": "Sitio de ventas falsas",
+                      "upvotes": 1
+                    },
+                    {
+                      "id": 8,
+                      "title": "Portal falso de soporte técnico",
+                      "upvotes": 1
+                    },
+                    {
+                      "id": 9,
+                      "title": "Portal falso de soporte técnico",
+                      "upvotes": 1
+                    },
+                    {
+                      "id": 26,
+                      "title": "Viaje a la luna",
+                      "upvotes": 1
+                    },
+                    {
+                      "id": 34,
+                      "title": "ventas de sillas: Silla de oficina que teletransporta a la playa por $300",
+                      "upvotes": 1
+                    },
+                    {
+                      "id": 44,
+                      "title": "ropa de marca original a súper descuento",
+                      "upvotes": 1
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get dashboard stats",
+        "tags": [
+          "Dashboard"
+        ]
+      }
+    },
+    "/users/register": {
+      "post": {
+        "operationId": "UserController_registerUser",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User field updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Fields missing or validation error",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "noName": {
+                    "summary": "No name provided",
+                    "value": {
+                      "message": [
+                        "Name should not be empty"
+                      ],
+                      "error": "Bad Request",
+                      "statusCode": 400
+                    }
+                  },
+                  "noEmail": {
+                    "summary": "No email provided",
+                    "value": {
+                      "message": [
+                        "Email should not be empty"
+                      ],
+                      "error": "Bad Request",
+                      "statusCode": 400
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Registro de un nuevo usuario",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/users": {
+      "put": {
+        "operationId": "UserController_partialUpdate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserOptionalDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User field updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No fields provided to update",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "No fields provided to update",
+                  "error": "Bad Request",
+                  "statusCode": 400
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized user",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Invalid token",
+                  "error": "Unauthorized",
+                  "statusCode": 401
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No user can have the same email",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Email already exists",
+                  "error": "Conflict",
+                  "statusCode": 409
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "El usuario actualiza su información",
+        "tags": [
+          "User"
+        ]
+      },
+      "get": {
+        "operationId": "UserController_getProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "All information of the user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "example": {
+                  "message": "Invalid token",
+                  "error": "Unauthorized",
+                  "statusCode": 401
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "El usuario obtiene la información de su perfil",
+        "tags": [
+          "User"
+        ]
+      },
+      "delete": {
+        "operationId": "UserController_deleteUser",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "El usuario borra su perfil",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/users/report": {
+      "post": {
+        "operationId": "UserController_postReport",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostReportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "El usuario crea un nuevo reporte",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/users/reports": {
+      "get": {
+        "operationId": "UserController_getUserReports",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "El usuario obtiene todos los reportes que ha realizado",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/users/password": {
+      "post": {
+        "operationId": "UserController_changePassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password changed successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Password changed successfully"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "invalidToken": {
+                    "summary": "Invalid token",
+                    "value": {
+                      "message": "Invalid token",
+                      "error": "Unauthorized",
+                      "statusCode": 401
+                    }
+                  },
+                  "invalidOldPassword": {
+                    "summary": "Invalid old password",
+                    "value": {
+                      "message": "Invalid old password",
+                      "error": "Unauthorized",
+                      "statusCode": 401
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "El usuario cambia su contraseña",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/users/post-info": {
+      "get": {
+        "operationId": "UserController_getPostInfo",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "pendiente": 1,
+                  "aprobada": 3,
+                  "rechazada": 0,
+                  "total": 4,
+                  "protegidas": 5
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "El usuario obtiene información sobre los reportes que ha realizado",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/users/settings-info": {
+      "get": {
+        "operationId": "UserController_getUserSettings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Get user settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateSettingsUserDto"
+                },
+                "example": {
+                  "is_reactions_enabled": 1,
+                  "is_review_enabled": 1,
+                  "is_reports_enabled": 1,
+                  "is_anonymous_reports_enabled": 0
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "El usuario obtiene la configuración de su perfil",
+        "tags": [
+          "User"
+        ]
+      },
+      "put": {
+        "operationId": "UserController_updateSettingsInfo",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSettingsUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Get user settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateSettingsUserDto"
+                },
+                "example": {
+                  "is_reactions_enabled": 1,
+                  "is_review_enabled": 1,
+                  "is_reports_enabled": 1
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "statusCode": 401,
+                    "message": "Unauthorized",
+                    "error": "Unauthorized"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "statusCode": 404,
+                    "message": "User with id 123 not found",
+                    "error": "Not Found"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "El usuario cambia algún elemento de su configuración",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/reports": {
+      "get": {
+        "description": "Obtiene una lista de reportes con filtrado opcional por estado y paginación.",
+        "operationId": "ReportsController_getReports",
+        "parameters": [
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "examples": {
+              "pendiente": {
+                "value": "1"
+              },
+              "aprobada": {
+                "value": "2"
+              },
+              "rechazada": {
+                "value": "3"
+              }
+            },
+            "schema": {
+              "enum": [
+                "1",
+                "2",
+                "3"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "examples": {
+              "valid": {
+                "value": "123"
+              },
+              "invalid": {
+                "value": "abc"
+              }
+            },
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "examples": {
+              "valid": {
+                "value": 1
+              },
+              "invalid": {
+                "value": -1
+              }
+            },
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of reports retrieved successfully.",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": 1,
+                    "title": "Reporte de sitio fraudulento",
+                    "image": "report-pictures/1d92a0a7cbb8f6a32b6ff1a98ecf2af4f13293be20e38e7db23ccfca9a412b8a.jpg",
+                    "description": "Este sitio web solicita datos bancarios sin medidas de seguridad y redirige a páginas falsas.",
+                    "created_at": "2025-09-27T23:50:39.000Z",
+                    "updated_at": "2025-09-27T23:50:39.000Z",
+                    "user_name": "Skibidi Toilet",
+                    "created_by": 1,
+                    "user_image": "profile-pictures/default.jpg",
+                    "report_url": "https://banco-seguro-falso.com",
+                    "categories": [
+                      1,
+                      5
+                    ]
+                  },
+                  {
+                    "id": 2,
+                    "title": "Página de phishing detectada",
+                    "image": "report-pictures/34baf3de9a5ef873b432bd723d9e0d45a4c2b79f915a86d2a7b5419ccf78d66c.jpg",
+                    "description": "El portal imita la interfaz de una empresa de envíos para robar credenciales de acceso.",
+                    "created_at": "2025-09-27T23:51:32.000Z",
+                    "updated_at": "2025-09-27T23:51:32.000Z",
+                    "user_name": "Dr. Sahur",
+                    "created_by": 2,
+                    "user_image": "profile-pictures/default.jpg",
+                    "report_url": "https://envios-gratis-seguro.net",
+                    "categories": [
+                      2,
+                      5
+                    ]
+                  },
+                  {
+                    "id": 3,
+                    "title": "Sitio de ventas falsas",
+                    "image": "report-pictures/57c0a3a48e923d8bb9e94b3a8ff743a58e9c4e71d4ccf0e6e2e3d513a7f49fdd.jpg",
+                    "description": "La página ofrece productos electrónicos a precios demasiado bajos y nunca realiza las entregas.",
+                    "created_at": "2025-09-27T23:51:51.000Z",
+                    "updated_at": "2025-09-27T23:51:51.000Z",
+                    "user_name": "Dr. Sahur",
+                    "created_by": 3,
+                    "user_image": "profile-pictures/default.jpg",
+                    "report_url": "https://ofertas-electronica-barata.org",
+                    "categories": [
+                      3,
+                      5
+                    ]
+                  },
+                  {
+                    "id": 5,
+                    "title": "Plataforma de inversión fraudulenta",
+                    "image": "report-pictures/b9237d0f30ecb0a7dc2f84e6a1cc3af324ea742b93a56f5dd8f0cb11e629bf5e.jpg",
+                    "description": "El sitio promete ganancias irreales en criptomonedas y exige depósitos sin garantía alguna.",
+                    "created_at": "2025-09-27T23:52:29.000Z",
+                    "updated_at": "2025-09-27T23:52:29.000Z",
+                    "user_name": "Dr. Sahur",
+                    "created_by": 2,
+                    "user_image": "profile-pictures/default.jpg",
+                    "report_url": "https://crypto-ganancias-rapidas.info",
+                    "categories": [
+                      4,
+                      5
+                    ]
+                  },
+                  {
+                    "id": 7,
+                    "title": "Portal falso de soporte técnico",
+                    "image": "report-pictures/ccf0a7bb2e9d9a4b8347ff291c4b731ddf28573c4a2a5b5d67e3bc111f0a89f3.jpg",
+                    "description": "La web se hace pasar por un servicio de soporte oficial y pide pagos por reparaciones inexistentes.",
+                    "created_at": "2025-09-27T23:52:50.000Z",
+                    "updated_at": "2025-09-27T23:52:50.000Z",
+                    "user_name": "Skibidi Toilet",
+                    "created_by": 1,
+                    "user_image": "profile-pictures/default.jpg",
+                    "report_url": "https://soporte-oficial-falso.com",
+                    "categories": [
+                      1,
+                      4
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "invalidStatus": {
+                    "value": {
+                      "message": "Status must be one of the following values: pendiente, aprobada, rechazada",
+                      "error": "Bad Request",
+                      "statusCode": 400
+                    }
+                  },
+                  "invalidId": {
+                    "value": {
+                      "message": "ID must be a positive integer",
+                      "error": "Bad Request",
+                      "statusCode": 400
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Report with specified ID not found.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "User with id 442 not found",
+                  "error": "Not Found",
+                  "statusCode": 404
+                }
+              }
+            }
+          }
+        },
+        "summary": "Obtiene los reportes",
+        "tags": [
+          "Reports"
+        ]
+      },
+      "post": {
+        "operationId": "ReportsController_createReport",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Create Report",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostReportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Report created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "reportId": 48,
+                    "report_category": [
+                      2,
+                      3
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "missingFields": {
+                    "summary": "Missing required fields",
+                    "value": {
+                      "statusCode": 400,
+                      "message": "field should not be empty",
+                      "error": "Bad Request"
+                    }
+                  },
+                  "invalidCategory": {
+                    "summary": "Invalid category",
+                    "value": {
+                      "statusCode": 400,
+                      "message": "One or more categories are invalid",
+                      "error": "Bad Request"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Crea un nuevo reporte",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
+    "/reports/{id}": {
+      "put": {
+        "operationId": "ReportsController_updateReport",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateReportDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Se actualizo el reporte correctamente",
+            "content": {
+              "application/json": {
+                "example": {
+                  "report": {
+                    "id": 53,
+                    "title": "Reporte de pagina fraudulenta",
+                    "image": "/images/reports/potholes.png",
+                    "description": "Solicitan informacion personal",
+                    "created_at": "2025-10-24T02:33:21.000Z",
+                    "updated_at": "2025-10-24T02:33:21.000Z",
+                    "created_by": 1,
+                    "status_id": 1,
+                    "report_url": "https://example.com/report/123",
+                    "is_anonymous": 0
+                  },
+                  "categories": [
+                    2,
+                    3
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No hay campos para actualizar",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "At least one field must be provided for update",
+                  "error": "Bad Request",
+                  "statusCode": 400
+                }
+              }
+            }
+          }
+        },
+        "summary": "Actualiza un reporte existente",
+        "tags": [
+          "Reports"
+        ]
+      },
+      "delete": {
+        "operationId": "ReportsController_deleteReport",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Report deleted successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Report not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "User with id 442 not found",
+                  "error": "Not Found",
+                  "statusCode": 404
+                }
+              }
+            }
+          }
+        },
+        "summary": "Elimina un reporte por su ID",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
+    "/reports/count": {
+      "get": {
+        "operationId": "ReportsController_countReports",
+        "parameters": [
+          {
+            "name": "status_id",
+            "required": false,
+            "in": "query",
+            "description": "Filter reports by status",
+            "examples": {
+              "pendiente": {
+                "value": "1"
+              },
+              "aprobada": {
+                "value": "2"
+              },
+              "rechazada": {
+                "value": "3"
+              }
+            },
+            "schema": {
+              "type": "string",
+              "enum": [
+                "1",
+                "2",
+                "3"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Count of reports",
+            "content": {
+              "application/json": {
+                "example": {
+                  "count": 42
+                }
+              }
+            }
+          }
+        },
+        "summary": "Cuenta los reportes, opcionalmente por estado",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login exitoso",
+            "content": {
+              "application/json": {
+                "example": {
+                  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidHlwZSI6ImFjY2VzcyIsInByb2ZpbGUiOnsiaWQiOiIxIiwiZW1haWwiOiJhcnR1cm9AZ21haWwuY29tIiwibmFtZSI6IkFydHVybyBVdHJpbGxhYSDDiURJVCIsInJvbGVfaWQiOjF9LCJpYXQiOjE3NjEyOTI0MTEsImV4cCI6MTc2MTI5NjAxMX0.ECBWVGu-tXr7Shs9qvg9LMISOXtFQmp3R8C5Uk8cUuw",
+                  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidHlwZSI6InJlZnJlc2giLCJpYXQiOjE3NjEyOTI0MTEsImV4cCI6MTc2MTg5NzIxMX0.tA-fCXWmhTzE1YlOXTpftjn_qFzZJoZaCJEPBEYrYZI"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Email inválido",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": [
+                    "email must be an email"
+                  ],
+                  "error": "Bad Request",
+                  "statusCode": 400
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciales inválidas o acceso no autorizado",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Invalid password",
+                  "error": "Unauthorized",
+                  "statusCode": 401
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuario no encontrado",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "User not found",
+                  "error": "Not Found",
+                  "statusCode": 404
+                }
+              }
+            }
+          }
+        },
+        "summary": "Login del usuario",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/profile": {
+      "get": {
+        "operationId": "AuthController_getProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Perfil del usuario obtenido exitosamente",
+            "content": {
+              "application/json": {
+                "example": {
+                  "profile": {
+                    "profile": {
+                      "id": "1",
+                      "email": "arturo@gmail.com",
+                      "name": "Arturo Utrillaa",
+                      "role_id": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido o no proporcionado",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Invalid token",
+                  "error": "Unauthorized",
+                  "statusCode": 401
+                }
+              }
+            }
+          }
+        },
+        "summary": "Obtener el perfil del usuario autenticado",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "operationId": "AuthController_refresh",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Token de acceso refrescado exitosamente",
+            "content": {
+              "application/json": {
+                "example": {
+                  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidHlwZSI6ImFjY2VzcyIsInByb2ZpbGUiOnsiaWQiOiIxIiwiZW1haWwiOiJhcnR1cm9AZ21haWwuY29tIiwibmFtZSI6IkFydHVybyBVdHJpbGxhYSDDiURJVCIsInJvbGVfaWQiOjF9LCJpYXQiOjE3NjEyOTI0MTEsImV4cCI6MTc2MTI5NjAxMX0.ECBWVGu-tXr7Shs9qvg9LMISOXtFQmp3R8C5Uk8cUuw",
+                  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidHlwZSI6InJlZnJlc2giLCJpYXQiOjE3NjEyOTI0MTEsImV4cCI6MTc2MTg5NzIxMX0.tA-fCXWmhTzE1YlOXTpftjn_qFzZJoZaCJEPBEYrYZI"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token de refresco inválido",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Invalid refresh token: JsonWebTokenError: invalid signature",
+                  "error": "Unauthorized",
+                  "statusCode": 401
+                }
+              }
+            }
+          }
+        },
+        "summary": "Refrescar el token de acceso",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/verify": {
+      "post": {
+        "operationId": "AuthController_verify",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Token de acceso válido",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Token is valid"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token de acceso inválido o no proporcionado",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Invalid token",
+                  "error": "Unauthorized",
+                  "statusCode": 401
+                }
+              }
+            }
+          }
+        },
+        "summary": "Verificar la validez del token de acceso",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/admin/user/{id}": {
+      "put": {
+        "operationId": "AdminController_putUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "El id del usuario",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Los campos a actualizar",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserOptionalDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User field updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No fields provided to update",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "examples": {
+                  "nofieldsToUpdate": {
+                    "summary": "No fields provided to update",
+                    "value": {
+                      "message": "No fields provided to update",
+                      "error": "Bad Request",
+                      "statusCode": 400
+                    }
+                  },
+                  "invalidEmail": {
+                    "summary": "Email validation failed",
+                    "value": {
+                      "message": [
+                        "email must be an email"
+                      ],
+                      "error": "Bad Request",
+                      "statusCode": 400
+                    }
+                  },
+                  "passwordTooShort": {
+                    "summary": "Password too short",
+                    "value": {
+                      "message": [
+                        "password must be longer than or equal to 8 characters"
+                      ],
+                      "error": "Bad Request",
+                      "statusCode": 400
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No user with that id found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "example": {
+                  "message": "User with id 442 not found",
+                  "error": "Not Found",
+                  "statusCode": 404
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No user can have the same email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "example": {
+                  "message": "Email already exists",
+                  "error": "Conflict",
+                  "statusCode": 409
+                }
+              }
+            }
+          }
+        },
+        "summary": "Modifica campos de un usuario por su id",
+        "tags": [
+          "Admin"
+        ]
+      },
+      "get": {
+        "operationId": "AdminController_getUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "El id del usuario",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "example": {
+                  "id": 1,
+                  "name": "Arturo Utrilla",
+                  "email": "arturo@gmail.com",
+                  "username": "Arturo_utrilla",
+                  "password": "e28dce46d564d38b9b58f6c85ff4bb75ba3df1202991f5b6e1d5e5d585c1b8e7",
+                  "salt": "9tuubdqpqei",
+                  "created_at": "2025-09-25T12:14:44.000Z",
+                  "updated_at": "2025-10-24T01:45:55.000Z",
+                  "image_path": "profile-pictures/d84c32b6211caf458c18f49db1992bebbf5dbfccc581e47aad0b77eee3ea637a.jpg",
+                  "role_id": 1
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No user with that id found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                },
+                "example": {
+                  "message": "User with id 442 not found",
+                  "error": "Not Found",
+                  "statusCode": 404
+                }
+              }
+            }
+          }
+        },
+        "summary": "Obtener un usuario por su id",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/user/list": {
+      "get": {
+        "operationId": "AdminController_getAllUsers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of all users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                },
+                "example": [
+                  {
+                    "id": 1,
+                    "name": "Arturo Utrilla",
+                    "email": "arturo@gmail.com",
+                    "username": "Arturo_utrilla",
+                    "password": "e28dce46d564d38b9b58f6c85ff4bb75ba3df1202991f5b6e1d5e5d585c1b8e7",
+                    "salt": "9tuubdqpqei",
+                    "created_at": "2025-09-25T12:14:44.000Z",
+                    "updated_at": "2025-10-24T01:45:55.000Z",
+                    "image_path": "profile-pictures/d84c32b6211caf458c18f49db1992bebbf5dbfccc581e47aad0b77eee3ea637a.jpg",
+                    "role_id": 1
+                  },
+                  {
+                    "id": 6,
+                    "name": "Ximena Sánchez",
+                    "email": "ximena@gmail.com",
+                    "username": "happy_ximena850",
+                    "password": "4190cf0be66e814ddb69bfc83cca3b4c92e82f8bc13ebd5bceee987a9fbae3c3",
+                    "salt": "3d513ivgakh",
+                    "created_at": "2025-10-08T15:03:21.000Z",
+                    "updated_at": "2025-10-08T15:03:21.000Z",
+                    "image_path": "profile-pictures/default.jpg",
+                    "role_id": 1
+                  },
+                  {
+                    "id": 13,
+                    "name": "Isa Montaño Mendoza",
+                    "email": "Isa@gmail.com",
+                    "username": "happy_isa834",
+                    "password": "e4ef680582390afd2ee67c7cc4f831c1621ab87e81433655caeeb5746b255473",
+                    "salt": "622l630parc",
+                    "created_at": "2025-10-15T19:24:19.000Z",
+                    "updated_at": "2025-10-15T19:24:19.000Z",
+                    "image_path": "profile-pictures/default.jpg",
+                    "role_id": 1
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "summary": "Obtener la lista de todos los usuarios",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/user/count": {
+      "get": {
+        "operationId": "AdminController_getUserCount",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Total number of users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "count": 12
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Obtener el número total de usuarios",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/categories": {
+      "post": {
+        "operationId": "CategoriesController_createCategory",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The category has been successfully created.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 1,
+                  "name": "Electrodomésticos",
+                  "description": "Aparatos para el hogar que facilitan las tareas diarias, como refrigeradores, lavadoras o microondas."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No fields provided to update",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "No fields provided to update",
+                  "error": "Bad Request",
+                  "statusCode": 400
+                }
+              }
+            }
+          }
+        },
+        "summary": "Crear una nueva categoría",
+        "tags": [
+          "Categories"
+        ]
+      },
+      "get": {
+        "operationId": "CategoriesController_getCategories",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Lista de categorías obtenida exitosamente",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": 1,
+                    "name": "Electrodomésticos",
+                    "description": "Aparatos para el hogar que facilitan las tareas diarias, como refrigeradores, lavadoras o microondas."
+                  },
+                  {
+                    "id": 2,
+                    "name": "Muebles",
+                    "description": "Artículos para amueblar y decorar espacios, incluyendo mesas, sillas, sofás y camas."
+                  },
+                  {
+                    "id": 3,
+                    "name": "Ropa",
+                    "description": "Prendas de vestir para diferentes estilos, climas y ocasiones."
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "summary": "Obtener todas las categorías",
+        "tags": [
+          "Categories"
+        ]
+      },
+      "put": {
+        "operationId": "CategoriesController_updateCategory",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The category has been successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCategoryDto"
+                },
+                "example": {
+                  "id": 1,
+                  "name": "Electrodomésticos",
+                  "description": "Aparatos para el hogar que facilitan las tareas diarias, como refrigeradores, lavadoras o microondas."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error with the request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "categoryIdRequired": {
+                    "summary": "Category ID is required for update",
+                    "value": {
+                      "message": "Category ID is required for update.",
+                      "error": "Bad Request",
+                      "statusCode": 400
+                    }
+                  },
+                  "categoryNotFound": {
+                    "summary": "No category with that id found",
+                    "value": {
+                      "message": "Category with id 442 not found",
+                      "error": "Not Found",
+                      "statusCode": 404
+                    }
+                  },
+                  "nofieldsToUpdate": {
+                    "summary": "No fields provided to update",
+                    "value": {
+                      "message": "No fields provided to update",
+                      "error": "Bad Request",
+                      "statusCode": 400
+                    }
+                  },
+                  "updateFailed": {
+                    "summary": "Failed to update this field",
+                    "value": {
+                      "message": "Failed to update this field.",
+                      "error": "Bad Request",
+                      "statusCode": 400
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Actualizar una categoría existente",
+        "tags": [
+          "Categories"
+        ]
+      },
+      "delete": {
+        "operationId": "CategoriesController_deleteCategory",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The category has been successfully deleted.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": "true"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "categoryIdRequired": {
+                    "summary": "Category ID is required for update",
+                    "value": {
+                      "message": "Category ID is required for update.",
+                      "error": "Bad Request",
+                      "statusCode": 400
+                    }
+                  },
+                  "categoryNotFound": {
+                    "summary": "No category with that id found",
+                    "value": {
+                      "message": "Category with id 442 not found",
+                      "error": "Not Found",
+                      "statusCode": 404
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Eliminar una categoría existente",
+        "tags": [
+          "Categories"
+        ]
+      }
+    },
+    "/roles": {
+      "get": {
+        "operationId": "RolesController_getAllRoles",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of all roles",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": 1,
+                    "name": "admin"
+                  },
+                  {
+                    "id": 2,
+                    "name": "user"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "summary": "Obtener todos los roles",
+        "tags": [
+          "Roles"
+        ]
+      }
+    },
+    "/notifications": {
+      "get": {
+        "operationId": "NotificationsController_getNotifications",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Lista de notificaciones obtenida correctamente.",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": 27,
+                    "message": "El estado de su reporte titulado Tienda de componentes de computadoras DDCompus ha sido actualizado a Aprobado",
+                    "created_at": "2025-10-24T02:21:32.000Z",
+                    "created_by": 1,
+                    "title": "El estado de su reporte ha cambiado a: Aprobado"
+                  },
+                  {
+                    "id": 26,
+                    "message": "El estado de su reporte titulado Tienda de componentes de computadoras DDCompus ha sido actualizado a Aprobado",
+                    "created_at": "2025-10-24T02:18:27.000Z",
+                    "created_by": 1,
+                    "title": "El estado de su reporte ha cambiado a: Aprobado"
+                  },
+                  {
+                    "id": 24,
+                    "message": "El estado de su reporte titulado Pagina fraudulenta ha sido actualizado a Rechazado",
+                    "created_at": "2025-10-24T01:53:38.000Z",
+                    "created_by": 1,
+                    "title": "El estado de su reporte ha cambiado a: Rechazado"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Obtener todas las notificaciones de un usuario",
+        "tags": [
+          "Notifications"
+        ]
+      },
+      "post": {
+        "operationId": "NotificationsController_addNotification",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotificationsDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Notificación creada correctamente.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Notificación creada correctamente"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos para crear la notificación.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": [
+                    "message must be a string"
+                  ],
+                  "error": "Bad Request",
+                  "statusCode": 400
+                }
+              }
+            }
+          }
+        },
+        "summary": "Crear una nueva notificación",
+        "tags": [
+          "Notifications"
+        ]
+      }
+    },
+    "/upvotes": {
+      "post": {
+        "operationId": "UpvotesController_postUpvote",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "reportId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Like creado exitosamente"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Crea un like a un reporte",
+        "tags": [
+          "Upvotes"
+        ]
+      },
+      "delete": {
+        "operationId": "UpvotesController_deleteUpvote",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "reportId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Like eliminado exitosamente",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true
+                }
+              }
+            }
+          }
+        },
+        "summary": "Elimina un like de un reporte",
+        "tags": [
+          "Upvotes"
+        ]
+      }
+    },
+    "/upvotes/total": {
+      "post": {
+        "operationId": "UpvotesController_totalUpvotes",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "postId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Total de likes obtenido exitosamente",
+            "content": {
+              "application/json": {
+                "example": 42
+              }
+            }
+          }
+        },
+        "summary": "Obtiene el total de likes de un post",
+        "tags": [
+          "Upvotes"
+        ]
+      }
+    },
+    "/images/{folder}": {
+      "post": {
+        "operationId": "ImagesController_uploadFile",
+        "parameters": [
+          {
+            "name": "folder",
+            "required": true,
+            "in": "path",
+            "description": "Carpeta destino para subir el archivo",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Subir una imagen a una carpeta",
+        "tags": [
+          "Images"
+        ]
+      }
+    },
+    "/images/{folder}/{path}": {
+      "put": {
+        "operationId": "ImagesController_modifyFile",
+        "parameters": [
+          {
+            "name": "folder",
+            "required": true,
+            "in": "path",
+            "description": "Carpeta donde se encuentra la imagen",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "path",
+            "required": true,
+            "in": "path",
+            "description": "Nombre o ruta de la imagen a modificar",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Archivo de imagen con la nueva versión"
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Modificar una imagen existente",
+        "tags": [
+          "Images"
+        ]
+      }
+    },
+    "/images": {
+      "delete": {
+        "operationId": "ImagesController_deleteFile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "Ruta del archivo a eliminar"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Eliminar una imagen por su ruta",
+        "tags": [
+          "Images"
+        ]
+      }
+    },
+    "/status": {
+      "get": {
+        "operationId": "StatusController_getStatus",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Estados de los reportes obtenidos correctamente.",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": 1,
+                    "status": "pendiente"
+                  },
+                  {
+                    "id": 2,
+                    "status": "aprobada"
+                  },
+                  {
+                    "id": 3,
+                    "status": "rechazada"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "summary": "Obtienes todos los estados de los reportes",
+        "tags": [
+          "Status"
+        ]
+      }
+    },
+    "/configurations/{id}": {
+      "get": {
+        "operationId": "ConfigurationsController_getConfiguration",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Configuración obtenida correctamente.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 1,
+                  "title": "Terminos y condiciones",
+                  "text": "1. Aceptación de los Términos\nAl acceder y utilizar la aplicación Red por la Ciberseguridad, usted acepta estar sujeto a estos términos y condiciones. Si no está de acuerdo con alguna parte de estos términos, no debe utilizar nuestra aplicación.\n\n2. Uso de la Aplicación\nEsta aplicación está diseñada para proporcionar información y herramientas relacionadas con la ciberseguridad. El usuario se compromete a:\n• Utilizar la aplicación de manera responsable y ética\n• No intentar comprometer la seguridad de la aplicación\n• Proporcionar información veraz y actualizada\n• Mantener la confidencialidad de sus credenciales de acceso\n\n3. Privacidad y Protección de Datos\nNos comprometemos a proteger su privacidad y datos personales de acuerdo con las leyes aplicables de protección de datos. La información recopilada se utiliza únicamente para los fines establecidos en nuestra política de privacidad.\n\n4. Responsabilidades del Usuario\nEl usuario es responsable de:\n• Mantener la seguridad de su cuenta\n• Utilizar contraseñas seguras\n• Reportar cualquier actividad sospechosa\n• Cumplir con las leyes locales aplicables"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Obtiene la configuración por ID",
+        "tags": [
+          "Configurations"
+        ]
+      },
+      "put": {
+        "operationId": "ConfigurationsController_updateConfiguration",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Configuración actualizada correctamente.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "result": "success"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Actualiza la configuración por ID",
+        "tags": [
+          "Configurations"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Endpoints de CRUD Usuarios",
+    "description": "",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [
+    {
+      "name": "Proyecto",
+      "description": ""
+    }
+  ],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "name@domain.com"
+          },
+          "name": {
+            "type": "string",
+            "example": "name"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123"
+          },
+          "role_id": {
+            "type": "string",
+            "example": "1",
+            "default": "1"
+          }
+        },
+        "required": [
+          "email",
+          "name",
+          "password"
+        ]
+      },
+      "UserResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 2
+          },
+          "name": {
+            "type": "string",
+            "example": "Dr. Sahur"
+          },
+          "email": {
+            "type": "string",
+            "example": "thungthungsahur@gmail.com"
+          },
+          "username": {
+            "type": "string",
+            "example": "cool_dr.527"
+          },
+          "salt": {
+            "type": "string",
+            "example": "go4fzup9s4m"
+          },
+          "created_at": {
+            "type": "string",
+            "example": "2025-09-25T14:59:41.000Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "example": "2025-09-25T14:59:41.000Z"
+          },
+          "image_path": {
+            "type": "string",
+            "example": "profile-pictures/default.jpg"
+          },
+          "role_id": {
+            "type": "number",
+            "example": 1
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "username",
+          "salt",
+          "created_at",
+          "updated_at",
+          "image_path",
+          "role_id"
+        ]
+      },
+      "UserSettingsDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 7
+          },
+          "user_id": {
+            "type": "number",
+            "example": 2
+          },
+          "is_reactions_enabled": {
+            "type": "number",
+            "example": 1
+          },
+          "is_review_enabled": {
+            "type": "number",
+            "example": 1
+          },
+          "is_reports_enabled": {
+            "type": "number",
+            "example": 1
+          }
+        },
+        "required": [
+          "id",
+          "user_id",
+          "is_reactions_enabled",
+          "is_review_enabled",
+          "is_reports_enabled"
+        ]
+      },
+      "RegisterResponseDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/UserResponseDto"
+          },
+          "settings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserSettingsDto"
+            }
+          }
+        },
+        "required": [
+          "user",
+          "settings"
+        ]
+      },
+      "CreateUserOptionalDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "username": {
+            "type": "string",
+            "example": "johndoe"
+          },
+          "image_path": {
+            "type": "string",
+            "example": "/path/to/image.jpg"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "1"
+          },
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "password": {
+            "type": "string",
+            "example": "55e1ebd3ebe4f1b46a5ccc9866d"
+          },
+          "salt": {
+            "type": "string",
+            "example": "432423"
+          },
+          "image_path": {
+            "type": "string",
+            "example": "/path/to/image.jpg"
+          },
+          "role_id": {
+            "type": "number",
+            "examples": [
+              1,
+              2
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "name",
+          "password",
+          "salt",
+          "role_id"
+        ]
+      },
+      "PostReportDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Reporte de pagina fraudulenta"
+          },
+          "image": {
+            "type": "string",
+            "example": "/images/reports/potholes.png"
+          },
+          "description": {
+            "type": "string",
+            "example": "Solicitan informacion personal"
+          },
+          "created_by": {
+            "type": "number",
+            "example": 1,
+            "description": "User ID of the creator"
+          },
+          "status_id": {
+            "type": "number",
+            "example": 1,
+            "description": "Status ID of the report"
+          },
+          "category": {
+            "example": [
+              1,
+              2
+            ],
+            "description": "Array of category IDs",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "report_url": {
+            "type": "string",
+            "example": "https://example.com/report/123"
+          },
+          "is_anonymous": {
+            "type": "number",
+            "enum": [
+              0,
+              1
+            ],
+            "examples": [
+              0,
+              1
+            ]
+          }
+        },
+        "required": [
+          "title",
+          "image",
+          "description",
+          "status_id",
+          "category",
+          "report_url",
+          "is_anonymous"
+        ]
+      },
+      "ExceptionResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number"
+          },
+          "message": {
+            "type": "object"
+          },
+          "error": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "statusCode",
+          "message",
+          "error"
+        ]
+      },
+      "ChangePasswordDto": {
+        "type": "object",
+        "properties": {
+          "oldPassword": {
+            "type": "string",
+            "example": "oldPassword123"
+          },
+          "newPassword": {
+            "type": "string",
+            "example": "newPassword123"
+          }
+        },
+        "required": [
+          "oldPassword",
+          "newPassword"
+        ]
+      },
+      "UpdateSettingsUserDto": {
+        "type": "object",
+        "properties": {
+          "is_reactions_enabled": {
+            "type": "number",
+            "description": "Enable or disable reactions feature",
+            "examples": [
+              0,
+              1
+            ]
+          },
+          "is_review_enabled": {
+            "type": "number",
+            "description": "Enable or disable review feature",
+            "examples": [
+              0,
+              1
+            ]
+          },
+          "is_reports_enabled": {
+            "type": "number",
+            "description": "Enable or disable reports feature",
+            "examples": [
+              0,
+              1
+            ]
+          },
+          "is_anonymous_preferred": {
+            "type": "number",
+            "description": "Enable or disable anonymous feature",
+            "examples": [
+              0,
+              1
+            ]
+          }
+        }
+      },
+      "UpdateReportDTO": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Updated Report Title",
+            "description": "Title of the report"
+          },
+          "description": {
+            "type": "string",
+            "example": "The report is about <topic>",
+            "description": "Description of the report"
+          },
+          "status_id": {
+            "type": "number",
+            "example": 2,
+            "description": "Status ID of the report"
+          },
+          "category": {
+            "example": [
+              1,
+              2
+            ],
+            "description": "Array of category IDs",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "image": {
+            "type": "string",
+            "example": "/report-pictures/updated_image.png",
+            "description": "Path to the report image"
+          },
+          "report_url": {
+            "type": "string",
+            "example": "https://example.com/report/1",
+            "description": "URL of the report"
+          }
+        }
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password"
+          },
+          "type": {
+            "type": "string",
+            "example": "web"
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "type"
+        ]
+      },
+      "CreateCategoryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the category",
+            "example": "Electronics"
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the category",
+            "example": "Devices and gadgets"
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ]
+      },
+      "UpdateCategoryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "The ID of the category",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the category",
+            "example": "Electronics"
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the category",
+            "example": "Devices and gadgets"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "DeleteCategoryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "The ID of the category to delete",
+            "example": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "NotificationsDTO": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "El estado de su reporte ha sido actualizado"
+          },
+          "message": {
+            "type": "string",
+            "example": "Su reporte ha sido actualizado"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2025-10-24T02:21:32.000Z"
+          },
+          "created_by": {
+            "type": "number",
+            "example": 1
+          }
+        },
+        "required": [
+          "title",
+          "message",
+          "created_by"
+        ]
+      }
+    }
+  }
+}

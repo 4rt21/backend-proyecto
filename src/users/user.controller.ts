@@ -11,9 +11,11 @@ import {
 } from '@nestjs/common';
 import { UserDto, UserService } from './users.service';
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
   ApiOkResponse,
+  ApiOperation,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guards/jwt.auth.guard';
@@ -46,6 +48,7 @@ export class UserController {
   ) {}
 
   @Post('register')
+  @ApiOperation({ summary: 'Registro de un nuevo usuario' })
   @ApiBody({ type: CreateUserDto })
   @ApiUserCreate()
   async registerUser(@Body() userDto: CreateUserDto): Promise<UserDto | void> {
@@ -58,6 +61,8 @@ export class UserController {
   }
 
   @ApiUserUpdate()
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'El usuario actualiza su información' })
   @UseGuards(JwtAuthGuard)
   @Put()
   async partialUpdate(
@@ -68,6 +73,8 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'El usuario crea un nuevo reporte' })
   @Post('report')
   async postReport(
     @Req() req: AuthenticatedRequest,
@@ -89,29 +96,9 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put('report')
-  async updateReport(
-    @Req() req: AuthenticatedRequest,
-    @Body() body: UpdateReportDTO,
-  ) {
-    if (
-      body.category === undefined &&
-      body.description === undefined &&
-      body.status_id === undefined &&
-      body.title === undefined &&
-      body.image === undefined
-    ) {
-      throw new BadRequestException(
-        'At least one field must be provided for update',
-      );
-    }
-
-    const id = req.user.profile.id;
-    return await this.reportsService.updateReport(id, body);
-  }
-
-  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get('reports')
+  @ApiOperation({summary: 'El usuario obtiene todos los reportes que ha realizado'})
   async getUserReports(@Req() req: AuthenticatedRequest) {
     const id = req.user.profile.id;
     return await this.reportsService.getUserReports(Number(id));
@@ -123,6 +110,7 @@ export class UserController {
     example: UnauthorizedResponse.invalidToken.value,
   })
   @ApiOkResponse({ description: 'All information of the user', type: User })
+  @ApiOperation({ summary: 'El usuario obtiene la información de su perfil' })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('')
@@ -147,6 +135,7 @@ export class UserController {
   })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'El usuario cambia su contraseña' })
   @Post('password')
   async changePassword(
     @Body() body: ChangePasswordDto,
@@ -162,12 +151,26 @@ export class UserController {
 
   @Get('post-info')
   @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary:
+      'El usuario obtiene información sobre los reportes que ha realizado',
+  })
+  @ApiOkResponse({
+    example: {
+      pendiente: 1,
+      aprobada: 3,
+      rechazada: 0,
+      total: 4,
+      protegidas: 5,
+    },
+  })
   @ApiBearerAuth()
   async getPostInfo(@Req() req: AuthenticatedRequest) {
     return this.userService.getPostInfo(req.user.profile.id);
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'El usuario borra su perfil' })
   @ApiBearerAuth()
   @Delete()
   async deleteUser(@Req() req: AuthenticatedRequest) {
@@ -176,6 +179,7 @@ export class UserController {
 
   @Get('settings-info')
   @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'El usuario obtiene la configuración de su perfil' })
   @ApiBearerAuth()
   @ApiGetSettings()
   async getUserSettings(@Req() req: AuthenticatedRequest) {
@@ -184,6 +188,9 @@ export class UserController {
 
   @Put('settings-info')
   @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: 'El usuario cambia algún elemento de su configuración',
+  })
   @ApiBearerAuth()
   @ApiUpdateSettings()
   async updateSettingsInfo(

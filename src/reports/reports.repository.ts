@@ -101,7 +101,6 @@ export class ReportsRepository {
         ORDER BY r.created_at ASC
         ${page ? ` LIMIT ${(Number(page) - 1) * 10}, 10` : ''}
         `;
-    console.log(sql);
 
     const [rows] = await this.dbService.getPool().query<RowDataPacket[]>(sql);
     return Promise.all(

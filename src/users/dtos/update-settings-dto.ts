@@ -58,7 +58,6 @@ export function ApiUpdateSettings() {
         },
       },
     }),
-
     ApiUnauthorizedResponse({
       description: 'Unauthorized user',
       schema: {

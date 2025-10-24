@@ -2,6 +2,7 @@ import { applyDecorators } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiProperty,
 } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
@@ -38,6 +39,7 @@ export class UpdateCategoryDto {
 
 export function ApiUpdateCategory() {
   return applyDecorators(
+    ApiOperation({ summary: 'Actualizar una categoría existente' }),
     ApiBadRequestResponse({
       description: 'Error with the request',
       examples: {

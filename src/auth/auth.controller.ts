@@ -12,7 +12,14 @@ import { TokensService } from './tokens.service';
 import { UserService } from 'src/users/users.service';
 import { JwtAuthGuard } from 'src/common/guards/jwt.auth.guard';
 import type { AuthenticatedRequest } from 'src/common/interfaces/authenticated-request';
-import { ApiProperty } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiProperty,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { IsEmail, IsEnum, IsString } from 'class-validator';
 const allowedRoles = {
   web: [2],
@@ -41,6 +48,40 @@ export class AuthController {
   ) {}
 
   @Post('login')
+  @ApiOperation({ summary: 'Login del usuario' })
+  @ApiOkResponse({
+    description: 'Login exitoso',
+    example: {
+      accessToken:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidHlwZSI6ImFjY2VzcyIsInByb2ZpbGUiOnsiaWQiOiIxIiwiZW1haWwiOiJhcnR1cm9AZ21haWwuY29tIiwibmFtZSI6IkFydHVybyBVdHJpbGxhYSDDiURJVCIsInJvbGVfaWQiOjF9LCJpYXQiOjE3NjEyOTI0MTEsImV4cCI6MTc2MTI5NjAxMX0.ECBWVGu-tXr7Shs9qvg9LMISOXtFQmp3R8C5Uk8cUuw',
+      refreshToken:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidHlwZSI6InJlZnJlc2giLCJpYXQiOjE3NjEyOTI0MTEsImV4cCI6MTc2MTg5NzIxMX0.tA-fCXWmhTzE1YlOXTpftjn_qFzZJoZaCJEPBEYrYZI',
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Credenciales inválidas o acceso no autorizado',
+    example: {
+      message: 'Invalid password',
+      error: 'Unauthorized',
+      statusCode: 401,
+    },
+  })
+  @ApiNotFoundResponse({
+    description: 'Usuario no encontrado',
+    example: {
+      message: 'User not found',
+      error: 'Not Found',
+      statusCode: 404,
+    },
+  })
+  @ApiBadRequestResponse({
+    description: 'Email inválido',
+    example: {
+      message: ['email must be an email'],
+      error: 'Bad Request',
+      statusCode: 400,
+    },
+  })
   async login(
     @Body()
     dto: LoginDto,
@@ -72,11 +113,51 @@ export class AuthController {
   }
 
   @Get('profile')
+  @ApiOperation({ summary: 'Obtener el perfil del usuario autenticado' })
+  @ApiOkResponse({
+    description: 'Perfil del usuario obtenido exitosamente',
+    example: {
+      profile: {
+        profile: {
+          id: '1',
+          email: 'arturo@gmail.com',
+          name: 'Arturo Utrillaa',
+          role_id: 1,
+        },
+      },
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Token inválido o no proporcionado',
+    example: {
+      message: 'Invalid token',
+      error: 'Unauthorized',
+      statusCode: 401,
+    },
+  })
   @UseGuards(JwtAuthGuard)
   getProfile(@Req() req: AuthenticatedRequest) {
     return { profile: req.user.profile };
   }
 
+  @ApiOperation({ summary: 'Refrescar el token de acceso' })
+  @ApiOkResponse({
+    description: 'Token de acceso refrescado exitosamente',
+    example: {
+      accessToken:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidHlwZSI6ImFjY2VzcyIsInByb2ZpbGUiOnsiaWQiOiIxIiwiZW1haWwiOiJhcnR1cm9AZ21haWwuY29tIiwibmFtZSI6IkFydHVybyBVdHJpbGxhYSDDiURJVCIsInJvbGVfaWQiOjF9LCJpYXQiOjE3NjEyOTI0MTEsImV4cCI6MTc2MTI5NjAxMX0.ECBWVGu-tXr7Shs9qvg9LMISOXtFQmp3R8C5Uk8cUuw',
+      refreshToken:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidHlwZSI6InJlZnJlc2giLCJpYXQiOjE3NjEyOTI0MTEsImV4cCI6MTc2MTg5NzIxMX0.tA-fCXWmhTzE1YlOXTpftjn_qFzZJoZaCJEPBEYrYZI',
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Token de refresco inválido',
+    example: {
+      message: 'Invalid refresh token: JsonWebTokenError: invalid signature',
+      error: 'Unauthorized',
+      statusCode: 401,
+    },
+  })
   @Post('refresh')
   async refresh(@Body() dto: { refreshToken: string }) {
     try {
@@ -101,12 +182,27 @@ export class AuthController {
   }
 
   @Post('verify')
+  @ApiOperation({ summary: 'Verificar la validez del token de acceso' })
+  @ApiOkResponse({
+    description: 'Token de acceso válido',
+    example: {
+      message: 'Token is valid',
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Token de acceso inválido o no proporcionado',
+    example: {
+      message: 'Invalid token',
+      error: 'Unauthorized',
+      statusCode: 401,
+    },
+  })
   @UseGuards(JwtAuthGuard)
   async verify(@Req() req: AuthenticatedRequest) {
     if (!req.user) {
       throw new UnauthorizedException('User not authenticated');
     }
-    if (!req.user.profile) { 
+    if (!req.user.profile) {
       throw new UnauthorizedException('User profile not found');
     }
     if (!req.user.profile.role_id) {

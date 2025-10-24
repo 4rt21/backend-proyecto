@@ -12,6 +12,7 @@ import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiQuery,
 } from '@nestjs/swagger';
 import { NotFoundResponse } from 'src/common/interfaces/exception-responses/responses-examples';
@@ -60,6 +61,11 @@ export class GetReportCountDto {
 
 export function ApiReportGet() {
   return applyDecorators(
+    ApiOperation({
+      summary: 'Obtiene los reportes',
+      description:
+        'Obtiene una lista de reportes con filtrado opcional por estado y paginación.',
+    }),
     ApiQuery({
       enum: ReportStatus,
       required: false,

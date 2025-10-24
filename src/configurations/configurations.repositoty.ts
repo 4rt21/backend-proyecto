@@ -21,8 +21,6 @@ export class ConfigurationsRepository {
       throw new BadRequestException('No data provided for update');
     }
 
-    console.log(data);
-
     const updates: string[] = [];
     const values: any[] = [];
 

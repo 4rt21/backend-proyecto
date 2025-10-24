@@ -8,7 +8,8 @@ import {
 import express from 'express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-import path from 'node:path';
+import path, { join } from 'node:path';
+import { writeFileSync } from 'node:fs';
 
 async function bootstrap() {
   const expressApp = express();
@@ -20,22 +21,25 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: 'http://localhost:5173',
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
 
+  
   const publicPath = path.join(__dirname, '..', 'public');
   app.useStaticAssets(publicPath);
-
+  
   const config = new DocumentBuilder()
-    .setTitle('Endpoints de CRUD Usuarios')
-    .setVersion('1.0')
-    .addTag('Proyecto')
-    .build();
-
-  const doc = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, doc);
+  .setTitle('Endpoints de CRUD Usuarios')
+  .setVersion('1.0')
+  .addTag('Proyecto')
+  .build();
+  
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
+  writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
+  app.useStaticAssets(join(__dirname, '..')); 
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -46,5 +50,4 @@ async function bootstrap() {
   );
   await app.listen(process.env.PORT ?? 3000);
 }
-
 bootstrap();

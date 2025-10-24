@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { RolesService } from './roles.service';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 
 @Controller('roles')
 export class RolesController {
@@ -13,6 +13,7 @@ export class RolesController {
       { id: 2, name: 'user' },
     ],
   })
+  @ApiOperation({ summary: 'Obtener todos los roles' })
   @Get()
   async getAllRoles() {
     return await this.rolesService.getAllRoles();

@@ -4,6 +4,7 @@ import {
   ApiBadRequestResponse,
   ApiBody,
   ApiOkResponse,
+  ApiOperation,
   ApiProperty,
 } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
@@ -51,6 +52,7 @@ export class CategoriesController {
     description: BadRequestExample.nofieldsToUpdate.summary,
     example: BadRequestExample.nofieldsToUpdate.value,
   })
+  @ApiOperation({ summary: 'Crear una nueva categoría' })
   async createCategory(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoriesService.createCategory(
       createCategoryDto.name,
@@ -59,8 +61,9 @@ export class CategoriesController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Obtener todas las categorías' })
   @ApiOkResponse({
-    description: 'List of all categories',
+    description: 'Lista de categorías obtenida exitosamente',
     example: [
       {
         id: 1,
